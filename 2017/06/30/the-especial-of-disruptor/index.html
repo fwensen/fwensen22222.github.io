@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java, Disruptor," />
 
 
 
@@ -93,14 +93,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Vincent Blog">
-<meta property="og:url" content="http://fwensen.github.io/tags/index.html">
+<meta name="description" content="1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除数据，所以不需要尾指针。2：重复利用数组，减少GC。3: 使用数组存储数据，可以利用缓存每次都加载一">
+<meta name="keywords" content="Java, Disruptor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ringbuffer的特别之处">
+<meta property="og:url" content="http://fwensen.github.io/2017/06/30/the-especial-of-disruptor/index.html">
 <meta property="og:site_name" content="Vincent Blog">
+<meta property="og:description" content="1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除数据，所以不需要尾指针。2：重复利用数组，减少GC。3: 使用数组存储数据，可以利用缓存每次都加载一">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-30T14:43:43.000Z">
+<meta property="og:updated_time" content="2017-07-30T14:53:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Vincent Blog">
+<meta name="twitter:title" content="Ringbuffer的特别之处">
+<meta name="twitter:description" content="1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除数据，所以不需要尾指针。2：重复利用数组，减少GC。3: 使用数组存储数据，可以利用缓存每次都加载一">
 
 
 
@@ -128,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/tags/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/06/30/the-especial-of-disruptor/"/>
 
 
 
 
 
-  <title>标签 | Vincent Blog</title>
+  <title>Ringbuffer的特别之处 | Vincent Blog</title>
   
 
 
@@ -264,25 +268,172 @@
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
 
-	<h1 class="post-title" itemprop="name headline"></h1>
+  
 
+  
+  
+  
 
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/the-especial-of-disruptor/">
 
-</header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vincent Blog">
+    </span>
 
     
-    
-      <div class="tag-cloud">
-        <div class="tag-cloud-title">
-            目前共计 2 个标签
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ringbuffer的特别之处</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:22+08:00">
+                2017-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Disruptor/" itemprop="url" rel="index">
+                    <span itemprop="name">Disruptor</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
         </div>
-        <div class="tag-cloud-tags">
-          <a href="/tags/Disruptor/" style="font-size: 12px; color: #ccc">Disruptor</a> <a href="/tags/Java-Disruptor/" style="font-size: 30px; color: #111">Java, Disruptor</a>
-        </div>
-      </div>
+      </header>
     
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-它是数组实现，比链表快，而且有一个容易预测的访问模式-数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行"><a href="#1-它是数组实现，比链表快，而且有一个容易预测的访问模式-数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行" class="headerlink" title="1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)"></a>1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，<strong>就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行</strong>)</h3><h3 id="2-数组预先分配，减少GC"><a href="#2-数组预先分配，减少GC" class="headerlink" title="2. 数组预先分配，减少GC"></a>2. 数组预先分配，减少GC</h3><p>Ringbuffer的特别之处。<br>1：减少竞争点，比如不删除数据，所以不需要尾指针。<br>2：重复利用数组，减少GC。<br>3: 使用数组存储数据，可以利用缓存每次都加载一个cacheline的特性。  </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-Disruptor/" rel="tag"># Java, Disruptor</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/30/cache-line-padding/" rel="next" title="缓冲行填充">
+                <i class="fa fa-chevron-left"></i> 缓冲行填充
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/30/memory-barrier/" rel="prev" title="内存屏障">
+                内存屏障 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -315,8 +466,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/touxiang.jpg"
@@ -389,6 +549,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-它是数组实现，比链表快，而且有一个容易预测的访问模式-数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行"><span class="nav-number">1.</span> <span class="nav-text">1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-数组预先分配，减少GC"><span class="nav-number">2.</span> <span class="nav-text">2. 数组预先分配，减少GC</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -509,10 +685,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
