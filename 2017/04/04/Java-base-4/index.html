@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Disruptor," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -93,18 +93,18 @@
 
 
 
-<meta name="description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
-<meta name="keywords" content="Disruptor">
+<meta name="description" content="1. Enum类型Java 语言中 Enum 类型的使用介绍Java 枚举7常见种用法小谈Java Enum的多态性java enum(枚举)使用详解 + 总结    为什么引入enum？在没有enum时，我们实现常量使用的方式是static final，但这种方式存在以下的问题：1.类型不安全，因为程序中可能会传入任意值；2. 没有命名空间，static final常量只是类的属性，使用时需要">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内存屏障">
-<meta property="og:url" content="http://fwensen.github.io/2017/06/30/memory-barrier/index.html">
+<meta property="og:title" content="Java基础四">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/04/Java-base-4/index.html">
 <meta property="og:site_name" content="Vincent Blog">
-<meta property="og:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta property="og:description" content="1. Enum类型Java 语言中 Enum 类型的使用介绍Java 枚举7常见种用法小谈Java Enum的多态性java enum(枚举)使用详解 + 总结    为什么引入enum？在没有enum时，我们实现常量使用的方式是static final，但这种方式存在以下的问题：1.类型不安全，因为程序中可能会传入任意值；2. 没有命名空间，static final常量只是类的属性，使用时需要">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-30T15:01:11.000Z">
+<meta property="og:updated_time" content="2017-07-30T15:12:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内存屏障">
-<meta name="twitter:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta name="twitter:title" content="Java基础四">
+<meta name="twitter:description" content="1. Enum类型Java 语言中 Enum 类型的使用介绍Java 枚举7常见种用法小谈Java Enum的多态性java enum(枚举)使用详解 + 总结    为什么引入enum？在没有enum时，我们实现常量使用的方式是static final，但这种方式存在以下的问题：1.类型不安全，因为程序中可能会传入任意值；2. 没有命名空间，static final常量只是类的属性，使用时需要">
 
 
 
@@ -132,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/2017/06/30/memory-barrier/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/04/Java-base-4/"/>
 
 
 
 
 
-  <title>内存屏障 | Vincent Blog</title>
+  <title>Java基础四 | Vincent Blog</title>
   
 
 
@@ -277,7 +277,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/memory-barrier/">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/04/Java-base-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent">
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">内存屏障</h1>
+          <h1 class="post-title" itemprop="name headline">Java基础四</h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:49+08:00">
-                2017-06-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T23:10:48+08:00">
+                2017-04-04
               </time>
             
 
@@ -329,8 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java-Disruptor/" itemprop="url" rel="index">
-                    <span itemprop="name">Java, Disruptor</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -363,16 +363,35 @@
       
 
       
-        <h3 id="1-什么是内存屏障？"><a href="#1-什么是内存屏障？" class="headerlink" title="1. 什么是内存屏障？"></a>1. 什么是内存屏障？</h3><p>它是一个CPU指令，用于：  </p>
-<ul>
-<li>确保一些特定操作执行的顺序；  </li>
-<li>影响一些数据的可见性；      </li>
-</ul>
+        <hr>
+<h3 id="1-Enum类型"><a href="#1-Enum类型" class="headerlink" title="1. Enum类型"></a>1. Enum类型</h3><p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-enum/" target="_blank" rel="external">Java 语言中 Enum 类型的使用介绍</a><br><a href="http://softbeta.iteye.com/blog/1185573" target="_blank" rel="external">Java 枚举7常见种用法</a><br><a href="http://pf-miles.iteye.com/blog/187155" target="_blank" rel="external">小谈Java Enum的多态性</a><br><a href="http://www.cnblogs.com/hyl8218/p/5088287.html" target="_blank" rel="external">java enum(枚举)使用详解 + 总结</a>  </p>
 <ol>
-<li>==编译器和CPU==可以<strong>在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。</strong>    </li>
-<li><strong>内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的</strong>  </li>
+<li><p>为什么引入enum？在没有enum时，我们实现常量使用的方式是static final，但这种方式存在以下的问题：1.类型不安全，因为程序中可能会传入任意值；2. 没有命名空间，static final常量只是类的属性，使用时需要通过类来访问？？？；3. 一致性差，因为这种常量值属于编译器常量，当修改值时，所有引用该常量的地方都会重新编译；4. 类型无指意性，这些常量值在仅是些无任何意义的整型值，若写入日志可能仅是些数字，除了开发的程序员一般不能了解其中的意义。所以引入了enum关键字。  </p>
+</li>
+<li><p>enum的使用：</p>
+<ul>
+<li>作为常量；  </li>
+<li>用于switch;  </li>
+<li>向枚举中添加新方法，注意在最后一个枚举常量后需加分号，构造函数需为private；  </li>
+<li>覆盖枚举方法，如覆盖toString();   </li>
+<li>实现接口，由于所有的枚举都继承于java.lang.Enum类，所以只能实现接口；  </li>
+<li>使用接口组织枚举，即接口内声明枚举，这些枚举都实现该接口；  </li>
+<li>枚举集合：如EnumSet和EnumMap，</li>
+</ul>
+</li>
+<li><p>enum实现原理  </p>
+</li>
 </ol>
-<p>这意味着如果你对一个volatile字段进行写操作，你必须知道：<br>1、一旦你完成写入，任何访问这个字段的线程将会得到最新的值。<br>2、在你写入前，会保证所有之前发生的事已经发生，并且任何更新过的数据值也是可见的，因为内存屏障会把之前的写入值都刷新到缓存。  </p>
+<p>enum类型的变量都是<strong>继承于Enum类</strong>，然后实现时，里面会声明这些static final的Enum类，同时里面会有一个static静态块，然后这些静态块各自实例化这些Enum对象，<strong>由于JVM类初始化是线程安全的，所以可以采用枚举类实现一个线程安全的单例模式</strong>：因为enum里的字段在实现时是static final的，所以它们会在初始化时期<clinit>初始化，而初始化时期是线程安全的。  例子如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Fruit &#123;  </div><div class="line">    APPLE, PEAR, PEACH, ORANGE;  </div><div class="line">&#125;  </div><div class="line"></div><div class="line"><span class="comment">//反编译后</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Fruit</span> <span class="keyword">extends</span> <span class="title">Enum</span>  </span></div><div class="line"><span class="class"></span>&#123;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Fruit</span><span class="params">(String s, <span class="keyword">int</span> i)</span>  </span></div><div class="line"><span class="function">    </span>&#123;  </div><div class="line">        <span class="keyword">super</span>(s, i);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Fruit[] values()  </div><div class="line">    &#123;  </div><div class="line">        Fruit afruit[];  </div><div class="line">        <span class="keyword">int</span> i;  </div><div class="line">        Fruit afruit1[];  </div><div class="line">        System.arraycopy(afruit = ENUM$VALUES, <span class="number">0</span>, afruit1 = <span class="keyword">new</span> Fruit[i = afruit.length], <span class="number">0</span>, i);  </div><div class="line">        <span class="keyword">return</span> afruit1;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Fruit <span class="title">valueOf</span><span class="params">(String s)</span>  </span></div><div class="line"><span class="function">    </span>&#123;  </div><div class="line">        <span class="keyword">return</span> (Fruit)Enum.valueOf(test/Fruit, s);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    <span class="comment">//静态的Fruit类</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit APPLE;  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit PEAR;  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit PEACH;  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit ORANGE;  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Fruit ENUM$VALUES[];  </div><div class="line">  </div><div class="line">    <span class="comment">//静态块内初始化</span></div><div class="line">    <span class="keyword">static</span>   </div><div class="line">    &#123;  </div><div class="line">        APPLE = <span class="keyword">new</span> Fruit(<span class="string">"APPLE"</span>, <span class="number">0</span>);  </div><div class="line">        PEAR = <span class="keyword">new</span> Fruit(<span class="string">"PEAR"</span>, <span class="number">1</span>);  </div><div class="line">        PEACH = <span class="keyword">new</span> Fruit(<span class="string">"PEACH"</span>, <span class="number">2</span>);  </div><div class="line">        ORANGE = <span class="keyword">new</span> Fruit(<span class="string">"ORANGE"</span>, <span class="number">3</span>);  </div><div class="line">        ENUM$VALUES = (<span class="keyword">new</span> Fruit[] &#123;  </div><div class="line">            APPLE, PEAR, PEACH, ORANGE  </div><div class="line">        &#125;);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></clinit></p>
+<ol>
+<li>使用enum实现单例类  <blockquote>
+<p>使用enum关键字来实现单例模式的好处是这样非常简洁，并且无偿地提供了序列化机制，绝对防止多次实例化，即使是在面对复杂的序列化或者反射攻击的时候。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;</div><div class="line">    </div><div class="line">    INSTANECE;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">    ...<span class="comment">//其它函数</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//使用时</span></div><div class="line">Singleton instacne = Singleton.INSTACNE;</div><div class="line">instance.foo();</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h3 id="2-注解"><a href="#2-注解" class="headerlink" title="2. 注解"></a>2. 注解</h3><p><a href="http://www.importnew.com/10294.html" target="_blank" rel="external">Java中的注解是如何工作的？</a><br><a href="http://www.cnblogs.com/longshiyVip/p/5189525.html" target="_blank" rel="external">Java注解全面解析</a>  </p>
 
       
     </div>
@@ -402,7 +421,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Disruptor/" rel="tag"># Disruptor</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -415,8 +434,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/30/cache-line-padding/" rel="next" title="缓冲行填充">
-                <i class="fa fa-chevron-left"></i> 缓冲行填充
+              <a href="/2017/04/04/Java-base-3/" rel="next" title="Java基础三">
+                <i class="fa fa-chevron-left"></i> Java基础三
               </a>
             
           </div>
@@ -424,6 +443,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/04/Java-base-5/" rel="prev" title="Java基础五">
+                Java基础五 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -564,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是内存屏障？"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是内存屏障？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Enum类型"><span class="nav-number">1.</span> <span class="nav-text">1. Enum类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-注解"><span class="nav-number">2.</span> <span class="nav-text">2. 注解</span></a></li></ol></div>
             
 
           </div>

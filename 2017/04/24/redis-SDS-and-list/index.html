@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Disruptor," />
+  <meta name="keywords" content="Redis," />
 
 
 
@@ -93,18 +93,20 @@
 
 
 
-<meta name="description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
-<meta name="keywords" content="Disruptor">
+<meta name="description" content="1、SDS实现Redis中使用SDS表示字符串值，这种结构是对c字符串的一种封装，使其支持O(1)时间获取字符串长度、动态扩展、更加安全等功能。定义如下：1234567891011121314/* * 保存字符串对象的结构 */struct sdshdr &amp;#123;        // buf 中已占用空间的长度    int len;    // buf 中剩余可用空间的长度    int f">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内存屏障">
-<meta property="og:url" content="http://fwensen.github.io/2017/06/30/memory-barrier/index.html">
+<meta property="og:title" content="动态字符串SDS和链表">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/24/redis-SDS-and-list/index.html">
 <meta property="og:site_name" content="Vincent Blog">
-<meta property="og:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta property="og:description" content="1、SDS实现Redis中使用SDS表示字符串值，这种结构是对c字符串的一种封装，使其支持O(1)时间获取字符串长度、动态扩展、更加安全等功能。定义如下：1234567891011121314/* * 保存字符串对象的结构 */struct sdshdr &amp;#123;        // buf 中已占用空间的长度    int len;    // buf 中剩余可用空间的长度    int f">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-30T15:01:11.000Z">
+<meta property="og:image" content="http://note.youdao.com/yws/api/personal/file/35B84ABEF3DC455287219A8A2B208D5B?method=download&shareKey=1e9e5404ae7d10614191cd16a60ba935">
+<meta property="og:updated_time" content="2017-07-30T15:16:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内存屏障">
-<meta name="twitter:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta name="twitter:title" content="动态字符串SDS和链表">
+<meta name="twitter:description" content="1、SDS实现Redis中使用SDS表示字符串值，这种结构是对c字符串的一种封装，使其支持O(1)时间获取字符串长度、动态扩展、更加安全等功能。定义如下：1234567891011121314/* * 保存字符串对象的结构 */struct sdshdr &amp;#123;        // buf 中已占用空间的长度    int len;    // buf 中剩余可用空间的长度    int f">
+<meta name="twitter:image" content="http://note.youdao.com/yws/api/personal/file/35B84ABEF3DC455287219A8A2B208D5B?method=download&shareKey=1e9e5404ae7d10614191cd16a60ba935">
 
 
 
@@ -132,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/2017/06/30/memory-barrier/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/24/redis-SDS-and-list/"/>
 
 
 
 
 
-  <title>内存屏障 | Vincent Blog</title>
+  <title>动态字符串SDS和链表 | Vincent Blog</title>
   
 
 
@@ -277,7 +279,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/memory-barrier/">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/24/redis-SDS-and-list/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent">
@@ -294,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">内存屏障</h1>
+          <h1 class="post-title" itemprop="name headline">动态字符串SDS和链表</h1>
         
 
         <div class="post-meta">
@@ -306,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:49+08:00">
-                2017-06-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T23:14:29+08:00">
+                2017-04-24
               </time>
             
 
@@ -329,8 +331,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java-Disruptor/" itemprop="url" rel="index">
-                    <span itemprop="name">Java, Disruptor</span>
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
                   </a>
                 </span>
 
@@ -363,16 +365,24 @@
       
 
       
-        <h3 id="1-什么是内存屏障？"><a href="#1-什么是内存屏障？" class="headerlink" title="1. 什么是内存屏障？"></a>1. 什么是内存屏障？</h3><p>它是一个CPU指令，用于：  </p>
-<ul>
-<li>确保一些特定操作执行的顺序；  </li>
-<li>影响一些数据的可见性；      </li>
-</ul>
-<ol>
-<li>==编译器和CPU==可以<strong>在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。</strong>    </li>
-<li><strong>内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的</strong>  </li>
+        <h3 id="1、SDS实现"><a href="#1、SDS实现" class="headerlink" title="1、SDS实现"></a>1、SDS实现</h3><p>Redis中使用SDS表示字符串值，这种结构是对c字符串的一种封装，使其支持O(1)时间获取字符串长度、动态扩展、更加安全等功能。定义如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * 保存字符串对象的结构</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></div><div class="line">    </div><div class="line">    <span class="comment">// buf 中已占用空间的长度</span></div><div class="line">    <span class="keyword">int</span> len;</div><div class="line"></div><div class="line">    <span class="comment">// buf 中剩余可用空间的长度</span></div><div class="line">    <span class="keyword">int</span> <span class="built_in">free</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 数据空间</span></div><div class="line">    <span class="keyword">char</span> buf[];</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h3 id="2-与c字符串的比较"><a href="#2-与c字符串的比较" class="headerlink" title="2. 与c字符串的比较"></a>2. 与c字符串的比较</h3><ul>
+<li><strong>能常数复杂度获取字符串长度</strong>：通过len字段能常数时间获得字符串的长度。  </li>
+<li><strong>杜绝缓冲区溢出</strong>：SDS字符串中，对于例如c字符串的strcat等操作，SDS能动态的进行空间分配，从而避免源字符串空间不够而引发的缓冲区溢出问题；  </li>
+<li><strong>减少修改字符串时带来的内存重分配次数</strong>：SDS实现了空间预分配和惰性空间释放两种优化方案：<ul>
+<li><strong>空间预分配</strong>：  <ol>
+<li>如果对SDS进行次改之后，SDS的长度将小于1MB，那么程序分配和len属性同样大小的未使用空间；  </li>
+<li>若大于1MB，那么程序将分配1MB未使用空间。    </li>
 </ol>
-<p>这意味着如果你对一个volatile字段进行写操作，你必须知道：<br>1、一旦你完成写入，任何访问这个字段的线程将会得到最新的值。<br>2、在你写入前，会保证所有之前发生的事已经发生，并且任何更新过的数据值也是可见的，因为内存屏障会把之前的写入值都刷新到缓存。  </p>
+</li>
+<li><strong>惰性空间释放</strong>：在SDS的API要缩短字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用free属性将这些字节的数量记录起来，并等待将来使用。(当然也可以使用相应API真正释放未使用空间)。    </li>
+</ul>
+</li>
+<li><strong>二进制安全</strong>：  很多c字符串函数以””\0”作为字符串结束标志，而使用SDS无须担心因为字符串中含有“\0”字符的情况，因为它使用len字段进行操作；  </li>
+<li><strong>兼容部分c字符串函数</strong>：可直接取得SDS结构体中字符数组。  </li>
+</ul>
+<p><img src="http://note.youdao.com/yws/api/personal/file/35B84ABEF3DC455287219A8A2B208D5B?method=download&amp;shareKey=1e9e5404ae7d10614191cd16a60ba935" alt="image">  </p>
+<h3 id="2-链表实现"><a href="#2-链表实现" class="headerlink" title="2. 链表实现"></a>2. 链表实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">*</div><div class="line"> * 双端链表节点</div><div class="line"> */</div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> &#123;</span></div><div class="line"></div><div class="line">    <span class="comment">// 前置节点</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> *<span class="title">prev</span>;</span></div><div class="line"></div><div class="line">    <span class="comment">// 后置节点</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> *<span class="title">next</span>;</span></div><div class="line"></div><div class="line">    <span class="comment">// 节点的值</span></div><div class="line">    <span class="keyword">void</span> *value;</div><div class="line"></div><div class="line">&#125; listNode;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * 双端链表结构</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list</span> &#123;</span></div><div class="line"></div><div class="line">    <span class="comment">// 表头节点</span></div><div class="line">    listNode *head;</div><div class="line"></div><div class="line">    <span class="comment">// 表尾节点</span></div><div class="line">    listNode *tail;</div><div class="line"></div><div class="line">    <span class="comment">// 节点值复制函数</span></div><div class="line">    <span class="keyword">void</span> *(*dup)(<span class="keyword">void</span> *ptr);</div><div class="line"></div><div class="line">    <span class="comment">// 节点值释放函数</span></div><div class="line">    <span class="keyword">void</span> (*<span class="built_in">free</span>)(<span class="keyword">void</span> *ptr);</div><div class="line"></div><div class="line">    <span class="comment">// 节点值对比函数</span></div><div class="line">    <span class="keyword">int</span> (*match)(<span class="keyword">void</span> *ptr, <span class="keyword">void</span> *key);</div><div class="line"></div><div class="line">    <span class="comment">// 链表所包含的节点数量</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> len;</div><div class="line"></div><div class="line">&#125; <span class="built_in">list</span>;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -402,7 +412,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Disruptor/" rel="tag"># Disruptor</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
         </div>
       
@@ -415,8 +425,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/30/cache-line-padding/" rel="next" title="缓冲行填充">
-                <i class="fa fa-chevron-left"></i> 缓冲行填充
+              <a href="/2017/04/04/Java-base-5/" rel="next" title="Java基础五">
+                <i class="fa fa-chevron-left"></i> Java基础五
               </a>
             
           </div>
@@ -424,6 +434,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/24/redis-skip-list/" rel="prev" title="redis跳跃表和整数集合">
+                redis跳跃表和整数集合 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -564,7 +578,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是内存屏障？"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是内存屏障？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、SDS实现"><span class="nav-number">1.</span> <span class="nav-text">1、SDS实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-与c字符串的比较"><span class="nav-number">2.</span> <span class="nav-text">2. 与c字符串的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-链表实现"><span class="nav-number">3.</span> <span class="nav-text">2. 链表实现</span></a></li></ol></div>
             
 
           </div>

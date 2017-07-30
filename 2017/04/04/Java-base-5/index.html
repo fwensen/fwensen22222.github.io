@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Disruptor," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -93,18 +93,20 @@
 
 
 
-<meta name="description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
-<meta name="keywords" content="Disruptor">
+<meta name="description" content="1. 容器Java中的容器讲解Java容器详细解析Java集合源码分析     1. ArrayList注意几点：    ArrayList默认大小为10；   ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；   允许null值的查找;   尽量别删除ArrayList中的元素，因为ArrayList是数组实现，若删除则会造成大量数据的复制。    2. Li">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内存屏障">
-<meta property="og:url" content="http://fwensen.github.io/2017/06/30/memory-barrier/index.html">
+<meta property="og:title" content="Java基础五">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/04/Java-base-5/index.html">
 <meta property="og:site_name" content="Vincent Blog">
-<meta property="og:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta property="og:description" content="1. 容器Java中的容器讲解Java容器详细解析Java集合源码分析     1. ArrayList注意几点：    ArrayList默认大小为10；   ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；   允许null值的查找;   尽量别删除ArrayList中的元素，因为ArrayList是数组实现，若删除则会造成大量数据的复制。    2. Li">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-30T15:01:11.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20140628144205625">
+<meta property="og:updated_time" content="2017-07-30T15:13:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内存屏障">
-<meta name="twitter:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta name="twitter:title" content="Java基础五">
+<meta name="twitter:description" content="1. 容器Java中的容器讲解Java容器详细解析Java集合源码分析     1. ArrayList注意几点：    ArrayList默认大小为10；   ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；   允许null值的查找;   尽量别删除ArrayList中的元素，因为ArrayList是数组实现，若删除则会造成大量数据的复制。    2. Li">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20140628144205625">
 
 
 
@@ -132,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/2017/06/30/memory-barrier/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/04/Java-base-5/"/>
 
 
 
 
 
-  <title>内存屏障 | Vincent Blog</title>
+  <title>Java基础五 | Vincent Blog</title>
   
 
 
@@ -277,7 +279,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/memory-barrier/">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/04/Java-base-5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent">
@@ -294,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">内存屏障</h1>
+          <h1 class="post-title" itemprop="name headline">Java基础五</h1>
         
 
         <div class="post-meta">
@@ -306,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:49+08:00">
-                2017-06-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T23:10:52+08:00">
+                2017-04-04
               </time>
             
 
@@ -329,8 +331,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java-Disruptor/" itemprop="url" rel="index">
-                    <span itemprop="name">Java, Disruptor</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -363,16 +365,31 @@
       
 
       
-        <h3 id="1-什么是内存屏障？"><a href="#1-什么是内存屏障？" class="headerlink" title="1. 什么是内存屏障？"></a>1. 什么是内存屏障？</h3><p>它是一个CPU指令，用于：  </p>
+        <h3 id="1-容器"><a href="#1-容器" class="headerlink" title="1. 容器"></a>1. 容器</h3><p><a href="http://blog.csdn.net/wwww1988600/article/details/8646191" target="_blank" rel="external">Java中的容器讲解</a><br><a href="http://www.cnblogs.com/LipeiNet/p/5888513.html" target="_blank" rel="external">Java容器详细解析</a><br><a href="http://blog.csdn.net/column/details/collection.html?page=1" target="_blank" rel="external">Java集合源码分析</a> </p>
+<p><img src="http://img.blog.csdn.net/20140628144205625" alt="">  </p>
+<h4 id="1-ArrayList"><a href="#1-ArrayList" class="headerlink" title="1. ArrayList"></a>1. ArrayList</h4><p>注意几点：  </p>
 <ul>
-<li>确保一些特定操作执行的顺序；  </li>
-<li>影响一些数据的可见性；      </li>
+<li>ArrayList默认大小为10；  </li>
+<li>ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；  </li>
+<li>允许null值的查找;  </li>
+<li>尽量别删除ArrayList中的元素，因为ArrayList是数组实现，若删除则会造成大量数据的复制。  </li>
 </ul>
+<h4 id="2-LinkedList"><a href="#2-LinkedList" class="headerlink" title="2. LinkedList"></a>2. LinkedList</h4><p>注意几点：</p>
+<ul>
+<li>LinkedList的实现是基于双向循环链表的；  </li>
+<li>在查找和删除某元素时，源码中都划分为该元素为null和不为null两种情况来处理，LinkedList中允许元素为null；  </li>
+<li>LinkedList是基于链表实现的，因此不存在容量不足的问题，所以这里没有扩容的方法；  </li>
+<li>注意源码中的Entry<e> entry(int index)方法。该方法返回双向链表中指定位置处的节点，而链表中是没有下标索引的，要指定位置出的元素，就要遍历该链表，从源码的实现中，我们看到这里有一个加速动作。源码中先将index与长度size的一半比较，如果index<size 2，就只从位置0往后遍历到位置index处，而如果index="">size/2，就只从位置size往前遍历到位置index处。这样可以减少一部分不必要的遍历，从而提高一定的效率（实际上效率还是很低）；  </size></e></li>
+<li>LinkedList是基于链表实现的，因此插入删除效率高，查找效率低  </li>
+<li></li>
+</ul>
+<h4 id="3-HashMap"><a href="#3-HashMap" class="headerlink" title="3. HashMap"></a>3. HashMap</h4><p><a href="https://my.oschina.net/hosee/blog/673521" target="_blank" rel="external">谈谈HashMap线程不安全的体现</a><br><a href="http://coolshell.cn/articles/9606.html" target="_blank" rel="external">疫苗：JAVA HASHMAP的死循环</a>  </p>
 <ol>
-<li>==编译器和CPU==可以<strong>在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。</strong>    </li>
-<li><strong>内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的</strong>  </li>
+<li>HashMap为什么线程不安全？  </li>
 </ol>
-<p>这意味着如果你对一个volatile字段进行写操作，你必须知道：<br>1、一旦你完成写入，任何访问这个字段的线程将会得到最新的值。<br>2、在你写入前，会保证所有之前发生的事已经发生，并且任何更新过的数据值也是可见的，因为内存屏障会把之前的写入值都刷新到缓存。  </p>
+<p>在HashMap扩容时，会调用一个transfer函数，该函数中若转移前链表顺序是1-&gt;2-&gt;3，那么转移后就会变成3-&gt;2-&gt;1。<br>这时候就有点头绪了，死锁问题不就是因为1-&gt;2的同时2-&gt;1造成的吗？所以，HashMap 的死锁问题就出在这个transfer()函数上。  </p>
+<h3 id="待补充"><a href="#待补充" class="headerlink" title="待补充"></a>待补充</h3><h4 id="4-TreeMap"><a href="#4-TreeMap" class="headerlink" title="4. TreeMap"></a>4. TreeMap</h4><p>1、TreeMap是根据key进行排序的，它的排序和定位需要依赖比较器或覆写Comparable接口，也因此不需要key覆写hashCode方法和equals方法，就可以排除掉重复的key，而HashMap的key则需要通过覆写hashCode方法和equals方法来确保没有重复的key。<br>2、TreeMap的查询、插入、删除效率均没有HashMap高，一般只有要对key排序时才使用TreeMap。<br>3、TreeMap的key不能为null，而HashMap的key可以为null。  </p>
+<h4 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h4><p><a href="http://blog.csdn.net/ns_code/article/details/37867985" target="_blank" rel="external">【Java集合源码剖析】LinkedHashmap源码剖析</a>  </p>
 
       
     </div>
@@ -402,7 +419,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Disruptor/" rel="tag"># Disruptor</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -415,8 +432,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/30/cache-line-padding/" rel="next" title="缓冲行填充">
-                <i class="fa fa-chevron-left"></i> 缓冲行填充
+              <a href="/2017/04/04/Java-base-4/" rel="next" title="Java基础四">
+                <i class="fa fa-chevron-left"></i> Java基础四
               </a>
             
           </div>
@@ -424,6 +441,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/24/redis-SDS-and-list/" rel="prev" title="动态字符串SDS和链表">
+                动态字符串SDS和链表 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -564,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是内存屏障？"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是内存屏障？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-容器"><span class="nav-number">1.</span> <span class="nav-text">1. 容器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-ArrayList"><span class="nav-number">1.1.</span> <span class="nav-text">1. ArrayList</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-LinkedList"><span class="nav-number">1.2.</span> <span class="nav-text">2. LinkedList</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-HashMap"><span class="nav-number">1.3.</span> <span class="nav-text">3. HashMap</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#待补充"><span class="nav-number">2.</span> <span class="nav-text">待补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-TreeMap"><span class="nav-number">2.1.</span> <span class="nav-text">4. TreeMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LinkedHashMap"><span class="nav-number">2.2.</span> <span class="nav-text">LinkedHashMap</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="1、Java反射谈谈Java反射机制Java反射机制应用实践详解Java反射各种应用   总结 为什么需要反射？ 因为Java不是动态语言，然而若要能有一种动态的机制，那么需要反射，例如在动态语言python中，我们可以动态的赋值，而不需要考虑具体的类型。为支持类似这一种机制引入了反射，反射是什么呢？我的理解是能在程序运行时访问更改类信息，如方法变量等，以支持一种更加灵活操作类的行为。而这些行为又">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础三">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/04/Java-base-3/index.html">
+<meta property="og:site_name" content="Vincent Blog">
+<meta property="og:description" content="1、Java反射谈谈Java反射机制Java反射机制应用实践详解Java反射各种应用   总结 为什么需要反射？ 因为Java不是动态语言，然而若要能有一种动态的机制，那么需要反射，例如在动态语言python中，我们可以动态的赋值，而不需要考虑具体的类型。为支持类似这一种机制引入了反射，反射是什么呢？我的理解是能在程序运行时访问更改类信息，如方法变量等，以支持一种更加灵活操作类的行为。而这些行为又">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20140701192620959?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaGVqaW5neXVhbjY=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:updated_time" content="2017-07-30T15:11:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础三">
+<meta name="twitter:description" content="1、Java反射谈谈Java反射机制Java反射机制应用实践详解Java反射各种应用   总结 为什么需要反射？ 因为Java不是动态语言，然而若要能有一种动态的机制，那么需要反射，例如在动态语言python中，我们可以动态的赋值，而不需要考虑具体的类型。为支持类似这一种机制引入了反射，反射是什么呢？我的理解是能在程序运行时访问更改类信息，如方法变量等，以支持一种更加灵活操作类的行为。而这些行为又">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20140701192620959?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaGVqaW5neXVhbjY=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/04/Java-base-3/"/>
+
+
+
+
+
+  <title>Java基础三 | Vincent Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vincent Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/04/Java-base-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vincent Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java基础三</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-04T23:10:37+08:00">
+                2017-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1、Java反射"><a href="#1、Java反射" class="headerlink" title="1、Java反射"></a>1、Java反射</h3><p><a href="http://www.jianshu.com/p/6277c1f9f48d#" target="_blank" rel="external">谈谈Java反射机制</a><br><a href="http://www.ziwenxie.site/2017/03/22/java-reflection/" target="_blank" rel="external">Java反射机制应用实践</a><br><a href="https://github.com/byhieg/JavaTutorial/tree/master/src/main/java/cn/byhieg/reflectiontutorial" target="_blank" rel="external">详解Java反射各种应用</a>  </p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><strong>为什么需要反射？</strong> 因为Java不是动态语言，然而若要能有一种动态的机制，那么需要反射，例如在动态语言python中，我们可以动态的赋值，而不需要考虑具体的类型。为支持类似这一种机制引入了反射，反射是什么呢？我的理解是能在程序运行时访问更改类信息，如方法变量等，以支持一种更加灵活操作类的行为。而这些行为又是很多框架所依赖的，例如在Spring中，需要读取XML文件，然后使用反射来创建类等。同时使用反射可以动态加载类，这样可使得程序更加灵活，不会对于未使用的类预先支付现金，而是在使用时，什么叫动态加载类呢， 运行时刻加载的类是动态加载类，而在编译时刻加载的类是静态加载类。  </li>
+<li><p>反射有哪些内容？</p>
+<ol>
+<li><p><strong>java.lang.Class类</strong>： 可理解成<strong>任何一个类都是Class的实例类</strong>，即任何一个类都可以通过Class来得到相应的实例类，可以说是一种类类型，任何一个类都可以通过以下三个方式之一获得相应的Class类：  </p>
+<ul>
+<li>className.class: 其中className为类名，如Integer.class；  </li>
+<li>instance.getClass(): instance为类实例，如String string = new String(“Hello”), 那么就有string.getClass();  </li>
+<li>Class.forName(“className”): 这里className为类的全名，即包括了类的包信息，如Class.forName(“com.xxx.C”);  </li>
+<li><p>我们可以通过getName()函数得到类名信息，还有getSimpleName()函数等。  </p>
+<p>在得到了Class类之后，我们就可以使用方法newInstance()方法创建类的实例，就和new类似。  </p>
+</li>
+</ul>
+</li>
+<li><p><strong>方法的反射</strong><br>通过1中三种方式在得到Class类信息后，我们便可以通过该类信息得到类的方法，getMethods()方法会得到Method数组，里面都是类的方法信息，同时在Method中，通过getName()函数得到方法名，通过getReturnType()得到返回值类型，在返回值类信息上调用getName()也可以得到返回类型的类型名，getParameterTypes()得到参数类型信息，同时在参数类型信息上调用getName()可得到类型名。  </p>
+</li>
+<li><p><strong>成员变量信息</strong><br>成员变量信息可知类类型信息上调用getFields()函数得到成员变量信息(Field)，成员变量信息上调用getType()可得到Class类型的类类型信息，调用getName()可得到变量名，getFields()函数是针对public变量的，若想要访问private变量，则需调用getDeclaredFields(methodName)函数进行相应的操作，该函数返回Filed信息，然后在其上调用setAccessible(true)，即可得到相应信息，还可更改，其实这可对应于方法的反射，方法的反射也可使用这种方式调用private方法。  </p>
+</li>
+<li><p><strong>构造函数的反射</strong><br>构造函数的反射不再赘述。  </p>
+</li>
+<li><p><strong>注解信息反射</strong><br>…</p>
+</li>
+</ol>
+</li>
+<li><p>反射的应用  </p>
+<ol>
+<li>结合注解使用：<br>我们可以通过反射来访问方法的注解信息，然后作相应的判断，如现在Spring中中提倡使用注解方式来装配类，那么其中的实现方式则是通过反射获得注解，然后作一定的判断。  </li>
+<li>结合XML使用，例如Spring中使用XML配置文件管理类。  </li>
+<li>解决泛型擦除问题<br>泛型擦除问题：在Java泛型中，有一个泛型擦除问题:在使用泛型时，任何具体的类型都被擦除，唯一知道的是你在使用一个对象。比如：List<string>和List<integer>在运行事实上是相同的类型。他们都被擦除成他们的原生类型，这个问题可使用泛型来解决，这时可使用newInstance()方法来获得Class类所真正指向的类实例。  </integer></string></li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="2-动态代理"><a href="#2-动态代理" class="headerlink" title="2. 动态代理"></a>2. 动态代理</h3><p><a href="https://www.zhihu.com/question/20794107" target="_blank" rel="external">Java 动态代理作用是什么？</a><br><a href="http://blog.csdn.net/scplove/article/details/52451899" target="_blank" rel="external">java动态代理原理及解析</a><br><a href="http://blog.csdn.net/hejingyuan6/article/details/36203505" target="_blank" rel="external"> JAVA学习篇–静态代理VS动态代理</a><br><a href="http://rejoy.iteye.com/blog/1627405" target="_blank" rel="external">JDK动态代理实现原理</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-proxy1/#ibm-pcon" target="_blank" rel="external">Java 动态代理机制分析及扩展</a>   </p>
+<ol>
+<li>什么是代理模式  <blockquote>
+<p>代理是一种常用的设计模式，其目的就是为其他对象提供一个代理以控制对某个对象的访问。代理类负责为委托类预处理消息，过滤消息并转发消息，以及进行消息被委托类执行后的后续处理。<br><img src="http://img.blog.csdn.net/20140701192620959?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaGVqaW5neXVhbjY=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""><br>更通俗的说，代理解决的问题当两个类需要通信时，引入第三方代理类，将两个类的关系解耦，让我们只了解代理类即可，而且代理的出现还可以让我们完成与另一个类之间的关系的统一管理，但是切记，代理类和委托类要实现相同的接口，因为代理真正调用的还是委托类的方法。<br>按照代理的创建时期，代理类可以分为两种：<br>  静态：由程序员创建代理类或特定工具自动生成源代码再对其编译。在程序运行前代理类的.class文件就已经存在了。<br>  动态：在程序运行时运用反射机制动态创建而成。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="1-代理模式总结"><a href="#1-代理模式总结" class="headerlink" title="1. 代理模式总结"></a>1. 代理模式总结</h4><p>代理模式中，客户端不需要知道实现类的具体类，它只需要实现相应的接口即可，这样可实现<strong>解耦</strong>，但同时由一些问题：1. 代理类和委托类实现了相同的接口，代理类通过委托类实现了相同的方法。这样就出现了<strong>大量的代码重复</strong>。如果接口增加一个方法，除了所有实现类需要实现这个方法外，所有代理类也需要实现此方法。增加了代码维护的复杂度。2. 代理对象<strong>只服务于一种类型的对象</strong>，如果要服务多类型的对象。势必要为每一种对象都进行代理，静态代理在程序规模稍大时就无法胜任了。<br>代理可以对实现类进行统一的管理，如在调用具体实现类之前，需要打印日志等信息，这样我们只需要添加一个代理类，在代理类中添加打印日志的功能，然后调用实现类，这样就避免了修改具体实现类。满足我们所说的<strong>开闭原则</strong>。==<strong>但是如果想让每个实现类都添加打印日志的功能的话，就需要添加多个代理类，以及代理类中各个方法都需要添加打印日志功能</strong>==，即静态代理类只能为特定的接口(Service)服务。如想要为多个接口服务则需要建立很多个代理类。  </p>
+<p>基于以上原因，引入了动态代理机制。  </p>
+<ol>
+<li>动态代理<blockquote>
+<p>动态代理是在运行时，通过反射机制实现动态代理，并且能够代理各种类型的对象。  </p>
+<ol>
+<li>动态代理如何使用？<br>代理类需要实现InvocationHandler接口，实现里面的invoke函数，获得相应的实现类时需使用Proxy类的newProxyInstance()函数。  </li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<ol>
+<li><p>动态代理实现原理  </p>
+<ul>
+<li>newProxyInstance(ClassLoader loader,  Class&lt;?&gt;[] interfaces, InvocationHandler h): 该函数会调用getProxyClass(loader, interfaces)获得代理类对象类型(Class)，然后调用Class的getConstructor得到对象类型的构造函数($ProxyN, N指代创建次数)，调用构造函数(newInstance)得到代理类的实例对象。  </li>
+<li>getProxyClass(classLoader loader, Class&lt;?&gt;… interfaces)：加载目标实现的接口到内存中，然后以缓存的方式提高效率，在ProxyGenerator的generateProxyClass函数中获得动态代理类的字节码，生成代理类实例，返回。  </li>
+<li>generateProxyClass(final String name, Class[] interfaces)：生成class字节码的地方。   </li>
+<li>谁来调用InvocationHandler的invoke方法： $ProxyN类继承于Proxy类，然后实现代理接口，里面的实现函数(即希望有业务的函数)会调用InvocationHandler的invoke函数，达到代理的作用。  </li>
+</ul>
+<ol>
+<li>问题：为什么动态代理只能是代理接口？因为<strong>内部实现代理类时继承了Proxy，而Java只能是单继承的</strong>，但能多实现接口，故只能代理接口。  </li>
+</ol>
+</li>
+</ol>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p>若问到动态代理的问题时  </p>
+<ul>
+<li>首先回答静态代理的实现原理(代理模式)，静态代理的优缺点：优点是实现解耦，缺点是1. <strong>每个代理类对应一个实现类，这样会有大量的冗余代码； 2. 因为每个代理对应一个实现类，所以若是需要对实现类增加打印、日志、安全等功能时，那么需要有多个代理类才可，这样同样会有大量的冗余，同时在每个代理类中都要加入相同的日志、打印、安全等功能</strong>，而动态代理的引入正是解决这两个问题：使用一个代理类就可以对应多个实现类，这样在实现日志、安全、打印事务等功能时，只需修改该代理类即可，类职责更加单一，复用性更强，无需大量的修改。例如Spring的AOP。  </li>
+<li>然后回答动态代理实现原理：<strong>动态代理会实现一个代理类$ProxyN，该代理类继承于Proxy类，实现代理接口，该代理类$ProxyN是通过生成代理对象的字节码，然后得到代理类的对象实例</strong>， 动态代理之所以只能代理接口的原因是Java不能实现类的多继承。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/04/Java-base-2/" rel="next" title="Java基础二">
+                <i class="fa fa-chevron-left"></i> Java基础二
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/04/Java-base-4/" rel="prev" title="Java基础四">
+                Java基础四 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/tavatar.jpg"
+               alt="Vincent" />
+          <p class="site-author-name" itemprop="name">Vincent</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fwensen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、Java反射"><span class="nav-number">1.</span> <span class="nav-text">1、Java反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-动态代理"><span class="nav-number">2.</span> <span class="nav-text">2. 动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-代理模式总结"><span class="nav-number">2.1.</span> <span class="nav-text">1. 代理模式总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结-1"><span class="nav-number">2.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vincent</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

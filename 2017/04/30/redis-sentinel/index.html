@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在监视的主服务器进入下线状态时，自动将下线主服务器属下的某台从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继续处理命令请求；    所以Sentinel的功能肯定有Master选举，故障转移等；   当监视到">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis Sentinel">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/30/redis-sentinel/index.html">
+<meta property="og:site_name" content="Vincent Blog">
+<meta property="og:description" content="Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在监视的主服务器进入下线状态时，自动将下线主服务器属下的某台从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继续处理命令请求；    所以Sentinel的功能肯定有Master选举，故障转移等；   当监视到">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/06D431B802B44BBAB77374F79FF59C7B/8146">
+<meta property="og:image" content="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/B20E3BC843C84259A92CF2EDD7D109A3/8148">
+<meta property="og:image" content="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/7216576C93D4470898DF2C3206CBEF34/8169">
+<meta property="og:image" content="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/498EEA3057124D85B2B09220132B854F/8171">
+<meta property="og:updated_time" content="2017-07-30T15:22:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis Sentinel">
+<meta name="twitter:description" content="Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在监视的主服务器进入下线状态时，自动将下线主服务器属下的某台从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继续处理命令请求；    所以Sentinel的功能肯定有Master选举，故障转移等；   当监视到">
+<meta name="twitter:image" content="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/06D431B802B44BBAB77374F79FF59C7B/8146">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/30/redis-sentinel/"/>
+
+
+
+
+
+  <title>redis Sentinel | Vincent Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vincent Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/30/redis-sentinel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vincent Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis Sentinel</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-30T23:19:55+08:00">
+                2017-04-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在监视的主服务器进入下线状态时，自动将下线主服务器属下的某台从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继续处理命令请求；  </p>
+</blockquote>
+<p>所以Sentinel的功能肯定有<strong>Master选举</strong>，<strong>故障转移</strong>等；  </p>
+<p>当监视到server1的下线时长超过用户设定的下线时长上线时，Sentinel系统就会对server1执行故障转移操作：  </p>
+<ul>
+<li>首先，Sentinel系统会挑选server1属下的其中一种从服务器，并将这个被选中的从服务器升级为新的主服务器； </li>
+<li>之后，Sentinel系统会向server1属下的所有从服务器发送新的复制指令，让它们成为新的主服务器的从服务器，当所有的从服务器都开始复制新的主服务器时，故障转移操作执行完毕；  </li>
+<li>另外，Sentinel还会继续监视已下线的server1，并在它重新上线时，将它设置为新的主服务器的从服务器。  </li>
+</ul>
+<h4 id="1-启动并初始化Sentinel"><a href="#1-启动并初始化Sentinel" class="headerlink" title="1. 启动并初始化Sentinel"></a>1. 启动并初始化Sentinel</h4><p>使用redis-sentinel /path/to/your/sentinel.conf或redis-server /path/to/your/sentinel.conf –sentinel启动Sentinel</p>
+<p>启动Sentinel时会执行以下步骤：  </p>
+<ul>
+<li>初始化服务器；  </li>
+<li>将普通Redis服务器使用的代码替换成Sentinel专用代码；  </li>
+<li>初始化Sentinel状态；  </li>
+<li>根据给定的配置文件，初始化Sentinel的监视主服务器列表；  </li>
+<li>创建连向主服务器的网络连接。  </li>
+</ul>
+<h5 id="1-初始化服务器"><a href="#1-初始化服务器" class="headerlink" title="1. 初始化服务器"></a>1. 初始化服务器</h5><p>因为Sentinel本质上只是一个运行在特殊模式下的Redis服务器，所以第一步是初始化一个普通的Redis服务器；但不同的是Sentinel并不是使用数据库，所以不会载入RBD或AOF文件；  </p>
+<h5 id="2-使用Sentinel专用代码"><a href="#2-使用Sentinel专用代码" class="headerlink" title="2. 使用Sentinel专用代码"></a>2. 使用Sentinel专用代码</h5><p>将一部分普通Redis服务器使用的专用代码替换成Sentinel专用代码。<br>Sentinel只使用PING, SENTINEL, INFO, SUBSCRIBE, UNSUBSCRIBE, PSUBSCRIBE和PUNSUBSCRIBE七个命令；  </p>
+<h5 id="3-初始化Sentinel状态"><a href="#3-初始化Sentinel状态" class="headerlink" title="3. 初始化Sentinel状态"></a>3. 初始化Sentinel状态</h5><p>接下来Sentinel会初始化一个sentinelState结构，这个结构保存了服务器中所有和Sentinel功能有关的状态。  </p>
+<h5 id="4-初始化Sentinel状态的masters属性"><a href="#4-初始化Sentinel状态的masters属性" class="headerlink" title="4. 初始化Sentinel状态的masters属性"></a>4. 初始化Sentinel状态的masters属性</h5><p>Sentinel状态中的masters字典记录了所有被Sentinel监视的主服务器的相关信息，其中：  </p>
+<ul>
+<li>字典的键是被监视主服务器的名字；  </li>
+<li>字典的值则是被监视主服务器对应的sentinel.c/SentinelRedisInstance结构。  </li>
+</ul>
+<h5 id="5-创建连向主服务器的网络连接"><a href="#5-创建连向主服务器的网络连接" class="headerlink" title="5. 创建连向主服务器的网络连接"></a>5. 创建连向主服务器的网络连接</h5><p>初始化最后一步时创建连向被监视主服务器的网络连接，Sentinel将成为主服务器的客户端，它可以向主服务器发送命令，并从命令回复中获取相关的信息。<br>对于每个被Sentinel监视的主服务器来说，Sentinel会创建两个连向主服务器的网络连接：  </p>
+<ul>
+<li>一个是命令连接，这个连接专门用于向主服务器发送命令，并接收命令回复；  </li>
+<li>另一个是订阅连接，这个连接专门用于订阅主服务器的<strong>sentinel</strong>:hello频道。  </li>
+</ul>
+<h4 id="2-获取主服务器信息"><a href="#2-获取主服务器信息" class="headerlink" title="2. 获取主服务器信息"></a>2. 获取主服务器信息</h4><p>Sentinel默认会以每十秒一次的频率，通过命令连接向被监视的主服务器发送INFO命令，并通过分析INFO命令的回复来获取主服务器的当前信息。  </p>
+<p>INFO信息中包含了以下两个方面的内容：  </p>
+<ul>
+<li>一方面是关于主服务器本身的信息，包括run_id域记录的服务器运行ID，以及role域记录的服务器角色； </li>
+<li>；另一方面是关于主服务器属下所有从服务器信息，每个从服务器都由一个“slave”字符串开头的行记录，每行的ip=域记录了从服务器的IP地址，而port=域记录端口号。根据这些信息，Sentinel无需 用户提供从服务器的地址信息，就可以自动发现从服务器。   </li>
+</ul>
+<p>Sentinel在分析INFO命令中包含的从服务器信息时，会检查从服务器对应的实例是否已经存在于slaves字典：  </p>
+<ul>
+<li>如果从服务器对应的实例已经存在，那么Sentinel对从服务器的实例结构进行更新；  </li>
+<li>如果从服务器对应的实例结构不存在，那么说明这个从服务器是新发现的，Sentinel会在slaves字典中为这个从服务器新创建一个实例结构；  </li>
+</ul>
+<h4 id="3-获取从服务器信息"><a href="#3-获取从服务器信息" class="headerlink" title="3. 获取从服务器信息"></a>3. 获取从服务器信息</h4><p>当Sentinel发现主服务器有新的从服务器出现时，Sentinel除了会为这个从服务器创建相应的实例结构外，Sentinel还会<strong>创建连接到从服务器的命令连接和订阅连接</strong>；  </p>
+<p>在创建命令连接后，Sentinel在默认情况下，会以每十秒一次的频率通过命令连接向从服务器发送INFO命令，获得提取以下内容：  </p>
+<ul>
+<li>从服务器的运行ID run_id.  </li>
+<li>从服务器的角色role;  </li>
+<li>主服务器的IP地址master_host，以及主服务器的端口号master_port；  </li>
+<li>主从服务器的连接状态master_ling_status；  </li>
+<li>从服务器的优先级slave_priority；  </li>
+<li>从服务器的复制偏移量slave_repl_offset。 </li>
+</ul>
+<h4 id="4-向主服务器和从服务器发送信息"><a href="#4-向主服务器和从服务器发送信息" class="headerlink" title="4. 向主服务器和从服务器发送信息"></a>4. 向主服务器和从服务器发送信息</h4><p>默认情况下，Sentinel会以每两秒一次的频率，通过命令连接向所有的主从服务器发送以下格式的命令：<br>PUBLISH <strong>sentinel</strong>:hello “<s_ip>, <s_port>, <s_runid>, <s_epoch>, <m_name>, <m_ip>, <m_port>, <m_epoch>“<br>其中以s<em>开头的参数记录了Sentinel本身的信息，以m</em>开头的参数记录的则是主服务器的信息。  </m_epoch></m_port></m_ip></m_name></s_epoch></s_runid></s_port></s_ip></p>
+<h4 id="5-接收来自主服务器和从服务器的频道信息"><a href="#5-接收来自主服务器和从服务器的频道信息" class="headerlink" title="5. 接收来自主服务器和从服务器的频道信息"></a>5. 接收来自主服务器和从服务器的频道信息</h4><p>对于每个与Sentinei连接的服务器，Sentinel即通过命令连接向sentinel<strong>:hello频道发送信息，又通过订阅连接从服务器的</strong>sentinel__:hello频道接收信息。  </p>
+<p>对于监视同一服务器的多个Sentinel来说，一个Sentinel发送的信息会被其他Sentinel接收到，这些信息会被用于更新其他Sentinel队发送信息Sentinel的认知，也会被用于更新其他Sentinel对被监视服务器的认知。  </p>
+<h5 id="1-更新sentinels字典"><a href="#1-更新sentinels字典" class="headerlink" title="1. 更新sentinels字典"></a>1. 更新sentinels字典</h5><p>Sentinel为主服务器创建的实例结构中的sentinels字典保存了除Sentinel本身之外，所有同样监视这个主服务器的其他Sentinel的资料；  </p>
+<p>当一个Sentinel接收到其他Sentinel发来的信息时，目标Sentinel会从信息中分析并提取以下两方面的参数：  </p>
+<ul>
+<li>与Sentinel有关的参数：源Sentinel的IP地址、端口号、运行ID和配置纪元；  </li>
+<li>与主服务器有关的参数：源Sentinel正在监视的主服务器名字，IP，PORT和配置纪元。  </li>
+</ul>
+<p>目标Sentinel根据这些信息来更新自己的sentinels字典，若存在源Sentinel实例，则更新，否则创建相应的实例。  </p>
+<h5 id="2-创建连向其他Sentinel的命令连接"><a href="#2-创建连向其他Sentinel的命令连接" class="headerlink" title="2. 创建连向其他Sentinel的命令连接"></a>2. 创建连向其他Sentinel的命令连接</h5><p>当Sentinel通过频道订阅信息发现一个新的Sentinel时，他不仅会为新的Sentinel在sentinels字典中创建相应的实例结构，还会创建一个连向新Sentinel的命令连接，而新的Sentinel也同样会创建连向这个Sentinel的命令连接，最终形成相互连接的网络。  </p>
+<h4 id="6-检测主管下线状态"><a href="#6-检测主管下线状态" class="headerlink" title="6. 检测主管下线状态"></a>6. 检测主管下线状态</h4><p>在默认情况下，Sentinel会以每秒一次的频率向所有与它创建命令连接的主服务器、从服务器、其他Sentinel发送PING命令，并通过实例返回的PING命令回复来判断实例是否在线。  </p>
+<p>有效回复有：实例返回-PONG、-LOADING、-MASTERDOWN回复的其中一种；<br>无效回复为以上三种回复除外的任一种回复。  </p>
+<p>如果在down-after-milliseconds毫秒内，连续向Sentinel返回无效回复，则对应的实例为主观下线状态。  </p>
+<h4 id="7-检测客观下线状态"><a href="#7-检测客观下线状态" class="headerlink" title="7. 检测客观下线状态"></a>7. 检测客观下线状态</h4><p>当Sentinel将一个主服务器判断为主观下线后，为确认这个主服务器是否真的下线了，它会向同样监视这一主服务器的其他Sentinel进行询问，看他们是否也认为主服务器已经进入了下线状态，当Sentinel从其他Sentinel那里接收到足够量(quorum值)的已下线判断后，Sentinel将从服务器判断为客观下线，并对主服务器进行故障转移操作。  </p>
+<h4 id="8-选举领头Sentinel-RAFT算法"><a href="#8-选举领头Sentinel-RAFT算法" class="headerlink" title="8. 选举领头Sentinel(RAFT算法)"></a>8. 选举领头Sentinel(RAFT算法)</h4><p><img src="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/06D431B802B44BBAB77374F79FF59C7B/8146" alt=""><br><img src="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/B20E3BC843C84259A92CF2EDD7D109A3/8148" alt="">  </p>
+<h4 id="9-故障转移"><a href="#9-故障转移" class="headerlink" title="9. 故障转移"></a>9. 故障转移</h4><p>当选出领头Sentinel后，领头Sentinel将对已下线的主服务器执行故障转移操作，包括以下三个步骤：  </p>
+<ul>
+<li>在已下线主服务器属下的所有从服务器里面，挑选出一个从服务器，并将其转移为主服务器；  </li>
+<li>让已下线主服务器属下的所有从服务器改为复制新的主服务器；  </li>
+<li>将已下线主服务器设置为新主服务器的从服务器，当这个旧主服务器重新上线时，它就会成为新主服务器的从服务器。  </li>
+</ul>
+<h4 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h4><p><img src="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/7216576C93D4470898DF2C3206CBEF34/8169" alt=""><br><img src="http://note.youdao.com/yws/public/resource/12eeca1b84ec5008b7c369d478db936a/xmlnote/498EEA3057124D85B2B09220132B854F/8171" alt="">  </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/29/redis-replication/" rel="next" title="redis复制">
+                <i class="fa fa-chevron-left"></i> redis复制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/30/cache-line-padding/" rel="prev" title="缓冲行填充">
+                缓冲行填充 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/tavatar.jpg"
+               alt="Vincent" />
+          <p class="site-author-name" itemprop="name">Vincent</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fwensen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-启动并初始化Sentinel"><span class="nav-number">1.</span> <span class="nav-text">1. 启动并初始化Sentinel</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-初始化服务器"><span class="nav-number">1.1.</span> <span class="nav-text">1. 初始化服务器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-使用Sentinel专用代码"><span class="nav-number">1.2.</span> <span class="nav-text">2. 使用Sentinel专用代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-初始化Sentinel状态"><span class="nav-number">1.3.</span> <span class="nav-text">3. 初始化Sentinel状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-初始化Sentinel状态的masters属性"><span class="nav-number">1.4.</span> <span class="nav-text">4. 初始化Sentinel状态的masters属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-创建连向主服务器的网络连接"><span class="nav-number">1.5.</span> <span class="nav-text">5. 创建连向主服务器的网络连接</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-获取主服务器信息"><span class="nav-number">2.</span> <span class="nav-text">2. 获取主服务器信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-获取从服务器信息"><span class="nav-number">3.</span> <span class="nav-text">3. 获取从服务器信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-向主服务器和从服务器发送信息"><span class="nav-number">4.</span> <span class="nav-text">4. 向主服务器和从服务器发送信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-接收来自主服务器和从服务器的频道信息"><span class="nav-number">5.</span> <span class="nav-text">5. 接收来自主服务器和从服务器的频道信息</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-更新sentinels字典"><span class="nav-number">5.1.</span> <span class="nav-text">1. 更新sentinels字典</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-创建连向其他Sentinel的命令连接"><span class="nav-number">5.2.</span> <span class="nav-text">2. 创建连向其他Sentinel的命令连接</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-检测主管下线状态"><span class="nav-number">6.</span> <span class="nav-text">6. 检测主管下线状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-检测客观下线状态"><span class="nav-number">7.</span> <span class="nav-text">7. 检测客观下线状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-选举领头Sentinel-RAFT算法"><span class="nav-number">8.</span> <span class="nav-text">8. 选举领头Sentinel(RAFT算法)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-故障转移"><span class="nav-number">9.</span> <span class="nav-text">9. 故障转移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重点回顾"><span class="nav-number">10.</span> <span class="nav-text">重点回顾</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vincent</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

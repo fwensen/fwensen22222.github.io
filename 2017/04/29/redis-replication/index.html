@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Disruptor," />
+  <meta name="keywords" content="Redis," />
 
 
 
@@ -93,18 +93,18 @@
 
 
 
-<meta name="description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
-<meta name="keywords" content="Disruptor">
+<meta name="description" content="用户通过执行SLAVEOF命令或设置slaveof选项，让一个服务器去复制另一个服务器，则被复制的服务器为主服务器，而对主服务器进行复制的为从服务器。    1. 旧版复制功能的实现复制功能包括两个：同步和命令传播。    同步操作作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态；   命令传播操作则是同于在主服务器的数据库状态被修改，导致主从服务器的数据库状态处于不一致时，让主从">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内存屏障">
-<meta property="og:url" content="http://fwensen.github.io/2017/06/30/memory-barrier/index.html">
+<meta property="og:title" content="redis复制">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/29/redis-replication/index.html">
 <meta property="og:site_name" content="Vincent Blog">
-<meta property="og:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta property="og:description" content="用户通过执行SLAVEOF命令或设置slaveof选项，让一个服务器去复制另一个服务器，则被复制的服务器为主服务器，而对主服务器进行复制的为从服务器。    1. 旧版复制功能的实现复制功能包括两个：同步和命令传播。    同步操作作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态；   命令传播操作则是同于在主服务器的数据库状态被修改，导致主从服务器的数据库状态处于不一致时，让主从">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-30T15:01:11.000Z">
+<meta property="og:updated_time" content="2017-07-30T15:21:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内存屏障">
-<meta name="twitter:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta name="twitter:title" content="redis复制">
+<meta name="twitter:description" content="用户通过执行SLAVEOF命令或设置slaveof选项，让一个服务器去复制另一个服务器，则被复制的服务器为主服务器，而对主服务器进行复制的为从服务器。    1. 旧版复制功能的实现复制功能包括两个：同步和命令传播。    同步操作作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态；   命令传播操作则是同于在主服务器的数据库状态被修改，导致主从服务器的数据库状态处于不一致时，让主从">
 
 
 
@@ -132,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/2017/06/30/memory-barrier/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/29/redis-replication/"/>
 
 
 
 
 
-  <title>内存屏障 | Vincent Blog</title>
+  <title>redis复制 | Vincent Blog</title>
   
 
 
@@ -277,7 +277,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/memory-barrier/">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/29/redis-replication/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent">
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">内存屏障</h1>
+          <h1 class="post-title" itemprop="name headline">redis复制</h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:49+08:00">
-                2017-06-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-29T23:19:48+08:00">
+                2017-04-29
               </time>
             
 
@@ -329,8 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java-Disruptor/" itemprop="url" rel="index">
-                    <span itemprop="name">Java, Disruptor</span>
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
                   </a>
                 </span>
 
@@ -363,16 +363,65 @@
       
 
       
-        <h3 id="1-什么是内存屏障？"><a href="#1-什么是内存屏障？" class="headerlink" title="1. 什么是内存屏障？"></a>1. 什么是内存屏障？</h3><p>它是一个CPU指令，用于：  </p>
+        <blockquote>
+<p>用户通过执行SLAVEOF命令或设置slaveof选项，让一个服务器去复制另一个服务器，则被复制的服务器为主服务器，而对主服务器进行复制的为从服务器。  </p>
+</blockquote>
+<h3 id="1-旧版复制功能的实现"><a href="#1-旧版复制功能的实现" class="headerlink" title="1. 旧版复制功能的实现"></a>1. 旧版复制功能的实现</h3><p>复制功能包括两个：同步和命令传播。  </p>
 <ul>
-<li>确保一些特定操作执行的顺序；  </li>
-<li>影响一些数据的可见性；      </li>
+<li>同步操作作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态；  </li>
+<li>命令传播操作则是同于在主服务器的数据库状态被修改，导致主从服务器的数据库状态处于不一致时，让主从服务器的数据库重新回到一致状态。  </li>
 </ul>
 <ol>
-<li>==编译器和CPU==可以<strong>在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。</strong>    </li>
-<li><strong>内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的</strong>  </li>
+<li>从服务器通过发送SYNC来同步主服务器，其主要步骤包括：  <ol>
+<li>从服务器向主服务器发送SYNC命令；  </li>
+<li>收到SYNC命令的主服务器执行BGSAVE命令，在后台生成一个RDB文件，用一个缓冲区记录从现在开始执行的所有写命令；  </li>
+<li>当主服务器的BGSAVE命令执行完成时，主服务器会将生成的RDB文件发送给从服务器，从服务器接收并载入该文件，将自己的数据库状态更新至主服务器的状态；  </li>
+<li>主服务器将缓冲区中所有的写命令发送给从服务器，从服务器执行这些写命令。  </li>
 </ol>
-<p>这意味着如果你对一个volatile字段进行写操作，你必须知道：<br>1、一旦你完成写入，任何访问这个字段的线程将会得到最新的值。<br>2、在你写入前，会保证所有之前发生的事已经发生，并且任何更新过的数据值也是可见的，因为内存屏障会把之前的写入值都刷新到缓存。  </p>
+</li>
+<li>传播命令  </li>
+</ol>
+<p>在同步完成之后，主从服务器达到一致状态，但在后面的运行中，可能由于主服务器的写而造成主从不一致，所以有命令传播的步骤。命令传播中，主服务器会将自己执行的写命令，也即是造成主从服务器不一致的那条写命令，发送给从服务器执行，当从服务器执行了相同的写命令后，主从服务器将再次回到一致状态。  </p>
+<ol>
+<li>旧版复制功能的缺陷<br>在从服务器断线后重连时，从服务器会使用SYNC命令与主服务器进行同步，而这时主服务器将<strong>生成所有数据的RDB文件发送给从服务器，这就会造成从服务器数据大量的重复，同时增加了通信的负担</strong>，所以这里是旧版复制的缺陷。  </li>
+</ol>
+<h3 id="2-新版复制功能"><a href="#2-新版复制功能" class="headerlink" title="2. 新版复制功能"></a>2. 新版复制功能</h3><p>从2.8版本后，使用PSYNC命令代替SYNC命令来执行复制时的同步操作。<br>PSYNC命令具有完整重同步和部分重同步两种模式：  </p>
+<ul>
+<li>完整重同步用于处理初次复制情况：与SYNC命令步骤基本一致，它们都会让主服务器生成RDB文件，以及主服务器发送保存在缓冲区里面的写命令来进行同步；  </li>
+<li>部分重同步则用于处理断线后重复制的情况：断线重连后，主服务器只会向从服务器发送断线期间执行的写命令，从服务器只要接收并执行这些写命令即可。  </li>
+</ul>
+<ol>
+<li>部分重同步的实现<br>实现有三部分构成：  </li>
+</ol>
+<ul>
+<li>主服务器的复制偏移量和从服务器的复制偏移量；  </li>
+<li>主服务器的复制积压缓冲区；  </li>
+<li>服务器的运行ID。  </li>
+</ul>
+<p>1）复制偏移量<br>执行复制的双方分别维护一个复制偏移量：  </p>
+<ul>
+<li>主服务器每次向从服务器传播N个字节的数据时，就将自己的复制偏移量值加N；  </li>
+<li>从服务器每次收到主服务器传播的N个字节数据时，就将自己的复制偏移量值加上N。  </li>
+</ul>
+<p>所以通过对比主从服务器的偏移量，就可以很容易的知道主从服务器是否处于一致状态。   </p>
+<p>2）复制积压缓冲区<br>复制积压缓冲区是由主服务器维护的一个固定长度的FIFO队列，默认大小为1MB。<br>当主服务器进行命令传播时，它不仅会将写命令发送给所有的从服务器，还会将写命令入队到复制积压缓冲区里面。并且复制积压缓冲区会为队列的每个字节记录相应的复制偏移量。  </p>
+<p>每当从服务器断线后重连上主服务器时，从服务器通过PSYNC命令将自己的复制偏移量offset发送给主服务器，主服务器根据这个复制偏移量来决定对从服务器执行何种同步操作：</p>
+<ul>
+<li>如果offset偏移量之后的数据仍然在复制积压缓冲区里面，那么主服务器将对从服务器执行部分重同步操作；  </li>
+<li>否则会执行完整重同步操作。  </li>
+</ul>
+<p>3）服务器运行ID  </p>
+<blockquote>
+<p>每个Redis服务器，不论主服务器还是从服务器，都会有自己的运行ID；<br>运行ID在服务器启动时自动生成，由40个随机的十六进制字符组成。  </p>
+</blockquote>
+<ol>
+<li>当从服务器进行初次复制时，主服务器将自己的运行ID传送给从服务器，而从服务器则会将这个运行ID保存起来。  </li>
+<li>在从服务器断线重连后，从服务器将向当前连接的主服务器发送之前保存的运行ID：<ul>
+<li>如果从服务器保存的运行ID和当前连接的主服务器ID相同，那么说明从服务器断线之前复制的就是当前连接的这个主服务器，主服务器可以继续尝试执行部分重同步操作；  </li>
+<li>否则，它们不是同一个主服务器，这时主服务器将对从服务器执行完整重同步操作。  </li>
+</ul>
+</li>
+</ol>
 
       
     </div>
@@ -402,7 +451,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Disruptor/" rel="tag"># Disruptor</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
         </div>
       
@@ -415,8 +464,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/30/cache-line-padding/" rel="next" title="缓冲行填充">
-                <i class="fa fa-chevron-left"></i> 缓冲行填充
+              <a href="/2017/04/28/redis-rdb-aof/" rel="next" title="RDB持久化和AOF持久化">
+                <i class="fa fa-chevron-left"></i> RDB持久化和AOF持久化
               </a>
             
           </div>
@@ -424,6 +473,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/30/redis-sentinel/" rel="prev" title="redis Sentinel">
+                redis Sentinel <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -564,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是内存屏障？"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是内存屏障？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-旧版复制功能的实现"><span class="nav-number">1.</span> <span class="nav-text">1. 旧版复制功能的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-新版复制功能"><span class="nav-number">2.</span> <span class="nav-text">2. 新版复制功能</span></a></li></ol></div>
             
 
           </div>

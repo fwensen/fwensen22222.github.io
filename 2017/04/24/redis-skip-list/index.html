@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Disruptor," />
+  <meta name="keywords" content="Redis," />
 
 
 
@@ -93,18 +93,18 @@
 
 
 
-<meta name="description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
-<meta name="keywords" content="Disruptor">
+<meta name="description" content="跳跃表-原理及Java实现SkipList 跳表   Redis中使用跳跃表作为有序集合键的底层实现之一。   12345678910111213141516171819202122232425262728293031323334353637383940414243/* ZSETs use a specialized version of Skiplists *//* * 跳跃表节点 */type">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="内存屏障">
-<meta property="og:url" content="http://fwensen.github.io/2017/06/30/memory-barrier/index.html">
+<meta property="og:title" content="redis跳跃表和整数集合">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/24/redis-skip-list/index.html">
 <meta property="og:site_name" content="Vincent Blog">
-<meta property="og:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta property="og:description" content="跳跃表-原理及Java实现SkipList 跳表   Redis中使用跳跃表作为有序集合键的底层实现之一。   12345678910111213141516171819202122232425262728293031323334353637383940414243/* ZSETs use a specialized version of Skiplists *//* * 跳跃表节点 */type">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-07-30T15:01:11.000Z">
+<meta property="og:updated_time" content="2017-07-30T15:16:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="内存屏障">
-<meta name="twitter:description" content="1. 什么是内存屏障？它是一个CPU指令，用于：    确保一些特定操作执行的顺序；   影响一些数据的可见性；         ==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。     内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入">
+<meta name="twitter:title" content="redis跳跃表和整数集合">
+<meta name="twitter:description" content="跳跃表-原理及Java实现SkipList 跳表   Redis中使用跳跃表作为有序集合键的底层实现之一。   12345678910111213141516171819202122232425262728293031323334353637383940414243/* ZSETs use a specialized version of Skiplists *//* * 跳跃表节点 */type">
 
 
 
@@ -132,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/2017/06/30/memory-barrier/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/24/redis-skip-list/"/>
 
 
 
 
 
-  <title>内存屏障 | Vincent Blog</title>
+  <title>redis跳跃表和整数集合 | Vincent Blog</title>
   
 
 
@@ -277,7 +277,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/memory-barrier/">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/04/24/redis-skip-list/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent">
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">内存屏障</h1>
+          <h1 class="post-title" itemprop="name headline">redis跳跃表和整数集合</h1>
         
 
         <div class="post-meta">
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:49+08:00">
-                2017-06-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T23:14:39+08:00">
+                2017-04-24
               </time>
             
 
@@ -329,8 +329,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java-Disruptor/" itemprop="url" rel="index">
-                    <span itemprop="name">Java, Disruptor</span>
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
                   </a>
                 </span>
 
@@ -363,16 +363,36 @@
       
 
       
-        <h3 id="1-什么是内存屏障？"><a href="#1-什么是内存屏障？" class="headerlink" title="1. 什么是内存屏障？"></a>1. 什么是内存屏障？</h3><p>它是一个CPU指令，用于：  </p>
-<ul>
-<li>确保一些特定操作执行的顺序；  </li>
-<li>影响一些数据的可见性；      </li>
-</ul>
+        <p><a href="http://www.cnblogs.com/acfox/p/3688607.html" target="_blank" rel="external">跳跃表-原理及Java实现</a><br><a href="http://kenby.iteye.com/blog/1187303" target="_blank" rel="external">SkipList 跳表</a>  </p>
+<p>Redis中使用跳跃表作为有序集合键的底层实现之一。  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* ZSETs use a specialized version of Skiplists */</span></div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * 跳跃表节点</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> &#123;</span></div><div class="line"></div><div class="line">    <span class="comment">// 成员对象</span></div><div class="line">    robj *obj;</div><div class="line"></div><div class="line">    <span class="comment">// 分值，跳跃表中节点按各自所保存的分值从小到大排列</span></div><div class="line">    <span class="keyword">double</span> score;</div><div class="line"></div><div class="line">    <span class="comment">// 后退指针</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">backward</span>;</span></div><div class="line"></div><div class="line">    <span class="comment">// 层,跳跃表中使用层来加快访问其它节点</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistLevel</span> &#123;</span></div><div class="line"></div><div class="line">        <span class="comment">// 前进指针</span></div><div class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">forward</span>;</span></div><div class="line"></div><div class="line">        <span class="comment">// 跨度</span></div><div class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> span;</div><div class="line"></div><div class="line">    &#125; level[];</div><div class="line"></div><div class="line">&#125; zskiplistNode;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * 跳跃表</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zskiplist</span> &#123;</span></div><div class="line"></div><div class="line">    <span class="comment">// 表头节点和表尾节点</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">zskiplistNode</span> *<span class="title">header</span>, *<span class="title">tail</span>;</span></div><div class="line"></div><div class="line">    <span class="comment">// 表中节点的数量</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> length;</div><div class="line"></div><div class="line">    <span class="comment">// 表中层数最大的节点的层数</span></div><div class="line">    <span class="keyword">int</span> level;</div><div class="line"></div><div class="line">&#125; zskiplist;</div></pre></td></tr></table></figure>
+<h3 id="2-整数集合"><a href="#2-整数集合" class="headerlink" title="2. 整数集合"></a>2. 整数集合</h3><p>整数集合是Redis用于保存整数值的集合抽象数据结构，它可以保存类型为int16_t, int32_t或int64_t的整数值，并且保证集合中不会出现重复元素。  </p>
+<p>结构定义如下：  </p>
+<pre><code class="C"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">intset</span> {</span>
+
+    <span class="comment">// 编码方式</span>
+    <span class="keyword">uint32_t</span> encoding;
+
+    <span class="comment">// 集合包含的元素数量</span>
+    <span class="keyword">uint32_t</span> length;
+
+    <span class="comment">// 保存元素的数组</span>
+    <span class="keyword">int8_t</span> contents[];
+
+} intset;
+</code></pre>
+<p>encoding决定了contents内容的类型，如encoding为int16_t，那么contents将保存int16_t类型的值，contents中的内容按值从小到大排序，并且不包含重复数值。  </p>
 <ol>
-<li>==编译器和CPU==可以<strong>在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。</strong>    </li>
-<li><strong>内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的</strong>  </li>
+<li><strong>升级</strong>  <blockquote>
+<p>每当我们要将一个新元素添加到整数集合里面，并且新元素的类型比整数集合现有所有元素的类型都要长时，整数集合需要先升级，然后才能将新元素添加到整数集合里面。  </p>
+</blockquote>
+</li>
 </ol>
-<p>这意味着如果你对一个volatile字段进行写操作，你必须知道：<br>1、一旦你完成写入，任何访问这个字段的线程将会得到最新的值。<br>2、在你写入前，会保证所有之前发生的事已经发生，并且任何更新过的数据值也是可见的，因为内存屏障会把之前的写入值都刷新到缓存。  </p>
+<p>升级的好处：  </p>
+<ul>
+<li>提升灵活性：避免类型错误；  </li>
+<li>节约内存： 若最开始直接使用int64_t，那么会很浪费内存。  </li>
+</ul>
 
       
     </div>
@@ -402,7 +422,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Disruptor/" rel="tag"># Disruptor</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
         </div>
       
@@ -415,8 +435,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/30/cache-line-padding/" rel="next" title="缓冲行填充">
-                <i class="fa fa-chevron-left"></i> 缓冲行填充
+              <a href="/2017/04/24/redis-SDS-and-list/" rel="next" title="动态字符串SDS和链表">
+                <i class="fa fa-chevron-left"></i> 动态字符串SDS和链表
               </a>
             
           </div>
@@ -424,6 +444,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/24/redis-dictory/" rel="prev" title="redis字典">
+                redis字典 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -564,7 +588,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是内存屏障？"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是内存屏障？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-整数集合"><span class="nav-number">1.</span> <span class="nav-text">2. 整数集合</span></a></li></ol></div>
             
 
           </div>
