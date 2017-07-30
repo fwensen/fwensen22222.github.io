@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -93,13 +93,24 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Vincent Blog">
-<meta property="og:url" content="http://fwensen.github.io/index.html">
+<meta name="description" content="1. Java内存模型全面理解Java内存模型volatile和synchronized的区别深入理解Java内存模型（一）    JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础一">
+<meta property="og:url" content="http://fwensen.github.io/2017/04/03/Java-base-1/index.html">
 <meta property="og:site_name" content="Vincent Blog">
+<meta property="og:description" content="1. Java内存模型全面理解Java内存模型volatile和synchronized的区别深入理解Java内存模型（一）    JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921182337904">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921182903818">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921183013570">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921183144995">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-polymorph/image003.jpg">
+<meta property="og:updated_time" content="2017-07-30T14:59:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Vincent Blog">
+<meta name="twitter:title" content="Java基础一">
+<meta name="twitter:description" content="1. Java内存模型全面理解Java内存模型volatile和synchronized的区别深入理解Java内存模型（一）    JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160921182337904">
 
 
 
@@ -127,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/04/03/Java-base-1/"/>
 
 
 
 
 
-  <title>Vincent Blog</title>
+  <title>Java基础一 | Vincent Blog</title>
   
 
 
@@ -158,9 +169,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,152 +272,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/06/30/memory-barrier/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vincent">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/tavatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Vincent Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/06/30/memory-barrier/" itemprop="url">内存屏障</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T22:49:49+08:00">
-                2017-06-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java-Disruptor/" itemprop="url" rel="index">
-                    <span itemprop="name">Java, Disruptor</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="1-什么是内存屏障？"><a href="#1-什么是内存屏障？" class="headerlink" title="1. 什么是内存屏障？"></a>1. 什么是内存屏障？</h3><p>它是一个CPU指令，用于：  </p>
-<ul>
-<li>确保一些特定操作执行的顺序；  </li>
-<li>影响一些数据的可见性；      </li>
-</ul>
-<ol>
-<li>==编译器和CPU==可以<strong>在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。</strong>    </li>
-<li><strong>内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的</strong>  </li>
-</ol>
-<p>这意味着如果你对一个volatile字段进行写操作，你必须知道：<br>1、一旦你完成写入，任何访问这个字段的线程将会得到最新的值。<br>2、在你写入前，会保证所有之前发生的事已经发生，并且任何更新过的数据值也是可见的，因为内存屏障会把之前的写入值都刷新到缓存。  </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
 
   
 
@@ -434,9 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/03/Java-base-1/" itemprop="url">Java基础一</a></h1>
+          <h1 class="post-title" itemprop="name headline">Java基础一</h1>
         
 
         <div class="post-meta">
@@ -505,9 +369,7 @@
       
 
       
-        
-          
-            <h2 id="1-Java内存模型"><a href="#1-Java内存模型" class="headerlink" title="1. Java内存模型"></a>1. Java内存模型</h2><p><a href="http://blog.csdn.net/suifeng3051/article/details/52611310" target="_blank" rel="external">全面理解Java内存模型</a><br><a href="http://blog.csdn.net/suifeng3051/article/details/52611233" target="_blank" rel="external">volatile和synchronized的区别</a><br><a href="http://www.infoq.com/cn/articles/java-memory-model-1" target="_blank" rel="external">深入理解Java内存模型（一）</a>  </p>
+        <h2 id="1-Java内存模型"><a href="#1-Java内存模型" class="headerlink" title="1. Java内存模型"></a>1. Java内存模型</h2><p><a href="http://blog.csdn.net/suifeng3051/article/details/52611310" target="_blank" rel="external">全面理解Java内存模型</a><br><a href="http://blog.csdn.net/suifeng3051/article/details/52611233" target="_blank" rel="external">volatile和synchronized的区别</a><br><a href="http://www.infoq.com/cn/articles/java-memory-model-1" target="_blank" rel="external">深入理解Java内存模型（一）</a>  </p>
 <ul>
 <li><h4 id="JMM决定一个线程对共享变量的写入何时对另一个线程可见-线程之间的共享变量存储在主内存（main-memory）中，每个线程都有一个私有的本地内存（local-memory），本地内存中存储了该线程以读-写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。"><a href="#JMM决定一个线程对共享变量的写入何时对另一个线程可见-线程之间的共享变量存储在主内存（main-memory）中，每个线程都有一个私有的本地内存（local-memory），本地内存中存储了该线程以读-写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。" class="headerlink" title="JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。"></a><strong>JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。</strong></h4></li>
 <li><p>所有原始类型(boolean,byte,short,char,int,long,float,double)的本地变量都直接保存在线程栈当中，对于它们的值各个线程之间都是独立的。对于原始类型的本地变量，一个线程可以传递一个副本给另一个线程，当它们之间是无法共享的。<br>堆区包含了Java应用创建的所有对象信息，不管对象是哪个线程创建的，其中的对象包括原始类型的封装类（如Byte、Integer、Long等等）。不管对象是属于一个成员变量还是方法中的本地变量，它都会被存储在堆区。<br><img src="http://img.blog.csdn.net/20160921182337904" alt=""><br><img src="http://img.blog.csdn.net/20160921182903818" alt=""><br>一个本地变量如果是<strong>原始类型</strong>，那么它会被完全存储到栈区。<br>一个本地变量也有可能是一个<strong>对象的引用</strong>，这种情况下，这个本地引用会被存储到栈中，但是对象本身仍然存储在堆区。<br>对于一个<strong>对象的成员方法</strong>，这些方法中包含本地变量，仍需要存储在栈区，即使它们所属的对象在堆区。<br>对于一个<strong>对象的成员变量</strong>，不管它是原始类型还是包装类型，都会被存储到堆区。<br><strong>Static类型的变量以及类本身相关信息</strong>都会随着类本身存储在堆区。  </p>
@@ -701,42 +563,72 @@
 <li>==<strong>(3) 不停的创建对象是程序低效的一个重要原因。那么相同的字符串值能否在堆中只创建一个String对象那。显然拘留字符串能够做到这一点，除了程序中的字符串常量会被JVM自动创建拘留字符串之外，调用String的intern()方法也能做到这一点。当调用intern()时，如果常量池中已经有了当前String的值，那么返回这个常量指向拘留对象的地址。如果没有，则将String值加入常量池中，并创建一个新的拘留字符串对象。</strong>==  </li>
 </ul>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/30/memory-barrier/" rel="prev" title="内存屏障">
+                内存屏障 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -744,6 +636,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -764,8 +660,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/tavatar.gif"
@@ -838,6 +743,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Java内存模型"><span class="nav-number">1.</span> <span class="nav-text">1. Java内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JMM决定一个线程对共享变量的写入何时对另一个线程可见-线程之间的共享变量存储在主内存（main-memory）中，每个线程都有一个私有的本地内存（local-memory），本地内存中存储了该线程以读-写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。"><span class="nav-number">1.0.1.</span> <span class="nav-text">JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#硬件内存架构"><span class="nav-number">1.0.2.</span> <span class="nav-text">硬件内存架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享对象可见性及共享对象的竞争"><span class="nav-number">1.0.3.</span> <span class="nav-text">共享对象可见性及共享对象的竞争</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#支撑Java内存模型的基础原理"><span class="nav-number">1.0.4.</span> <span class="nav-text">支撑Java内存模型的基础原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#volatile和synchronized的区别"><span class="nav-number">1.0.5.</span> <span class="nav-text">volatile和synchronized的区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-多态"><span class="nav-number">2.</span> <span class="nav-text">2. 多态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Java多态实现方式"><span class="nav-number">2.0.1.</span> <span class="nav-text">Java多态实现方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Object类中的方法"><span class="nav-number">3.</span> <span class="nav-text">3. Object类中的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-类访问权限"><span class="nav-number">4.</span> <span class="nav-text">4. 类访问权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-sleep、wait方法的联系与区别"><span class="nav-number">5.</span> <span class="nav-text">5. sleep、wait方法的联系与区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-String、StringBuffer、StringBuilder联系区别与源码"><span class="nav-number">6.</span> <span class="nav-text">6. String、StringBuffer、StringBuilder联系区别与源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String对象的创建"><span class="nav-number">6.1.</span> <span class="nav-text">String对象的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String、StringBuffer和StringBuilder"><span class="nav-number">6.2.</span> <span class="nav-text">String、StringBuffer和StringBuilder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-StringBuffer和String的可变性问题"><span class="nav-number">6.2.1.</span> <span class="nav-text">1. StringBuffer和String的可变性问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-StringBuffer和StringBuilder的线程安全性问题"><span class="nav-number">6.2.2.</span> <span class="nav-text">2. StringBuffer和StringBuilder的线程安全性问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#synchronized含义"><span class="nav-number">6.2.3.</span> <span class="nav-text">synchronized含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-String和StringBuffer的效率问题"><span class="nav-number">6.2.4.</span> <span class="nav-text">3. String和StringBuffer的效率问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -958,10 +879,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
