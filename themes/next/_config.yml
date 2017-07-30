@@ -77,8 +77,8 @@ menu_icons:
 # ---------------------------------------------------------------
 
 # Schemes
-scheme: Muse
-#scheme: Mist
+#scheme: Muse
+scheme: Mist
 #scheme: Pisces
 
 
@@ -181,7 +181,7 @@ excerpt_description: true
 # Please use <!-- more --> in the post to control excerpt accurately.
 auto_excerpt:
   enable: true
-  length: 150
+  length: 300
 
 # Post meta display settings
 post_meta:
