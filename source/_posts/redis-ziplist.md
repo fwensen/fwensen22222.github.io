@@ -1,7 +1,7 @@
 ---
 title: redis压缩列表
 date: 2017-04-24 23:14:49
-tags:Redis
+tags: Redis
 categories: Redis
 ---
 

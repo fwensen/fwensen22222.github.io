@@ -1,7 +1,7 @@
 ---
 title: Disruptor的优点
 tags: Disruptor
-catagories:Java, Disruptor
+catagories: Java, Disruptor
 date: 2017-06-30 22:46:51
 ---
 
