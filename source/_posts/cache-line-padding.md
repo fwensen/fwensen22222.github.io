@@ -2,7 +2,7 @@
 title: 缓冲行填充
 date: 2017-06-30 22:49:00
 tags: Disruptor 
-categories: Java, Disruptor
+categories: Java  Disruptor
 ---
 
 [缓冲行填充](http://ifeve.com/disruptor-cacheline-padding/)
