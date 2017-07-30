@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -107,7 +107,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     motion: true,
@@ -366,7 +366,7 @@
           
           跳跃表-原理及Java实现SkipList 跳表  
 Redis中使用跳跃表作为有序集合键的底层实现之一。  
-12345678910111213141516171819202122232425262728293031323334353637383940414243/* ZSETs use a sp
+12345678910111213141516171819202122232425262728293031323334353637383940414243/* ZSETs use a specialized version of Skiplists *//* * 跳跃表节点 */typedef struct zskiplistNode &#123;    // 成员对象    robj *obj;    // 分值，跳跃表中节点按各自所保存的分值从小到大排列    double sc
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -506,7 +506,10 @@ Redis中使用跳跃表作为有序集合键的底层实现之一。
       
         
           
-          1、SDS实现Redis中使用SDS表示字符串值，这种结构是对c字符串的一种封装，使其支持O(1)时间获取字符串长度、动态扩展、更加安全等功能。定义如下：1234567891011121314/* * 保存字符串对象的结构 */struct sdshdr &#123;        // buf 中
+          1、SDS实现Redis中使用SDS表示字符串值，这种结构是对c字符串的一种封装，使其支持O(1)时间获取字符串长度、动态扩展、更加安全等功能。定义如下：1234567891011121314/* * 保存字符串对象的结构 */struct sdshdr &#123;        // buf 中已占用空间的长度    int len;    // buf 中剩余可用空间的长度    int free;    // 数据空间    char buf[];&#125;;
+2. 与c字符串的比较
+能常数复杂度获取字符串长度：通过len字段能常数时间获得字符串的长度。  
+杜绝缓冲区溢出：SDS字
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -653,7 +656,12 @@ Redis中使用跳跃表作为有序集合键的底层实现之一。
 ArrayList默认大小为10；  
 ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；  
 允许null值的查找;  
-尽量别删除Array
+尽量别删除ArrayList中的元素，因为ArrayList是数组实现，若删除则会造成大量数据的复制。  
+
+2. LinkedList注意几点：
+
+LinkedList的实现是基于双向循环链表的；  
+在查找和删除某元素时，源码中都划分为该元素为null和不为null两种情况来处理，LinkedList中允许元素为n
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -796,7 +804,7 @@ ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；
           
 1. Enum类型Java 语言中 Enum 类型的使用介绍Java 枚举7常见种用法小谈Java Enum的多态性java enum(枚举)使用详解 + 总结  
 
-为什么引入enum？在没有enum时，我们实现常量使用的方式是static final，但这种方式存在以下的问题：1.类型不安全，
+为什么引入enum？在没有enum时，我们实现常量使用的方式是static final，但这种方式存在以下的问题：1.类型不安全，因为程序中可能会传入任意值；2. 没有命名空间，static final常量只是类的属性，使用时需要通过类来访问？？？；3. 一致性差，因为这种常量值属于编译器常量，当修改值时，所有引用该常量的地方都会重新编译；4. 类型无指意性，这些常量值在仅是些无任何意义的整型值，若写入日志可能仅是些数字，除了
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -938,7 +946,7 @@ ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；
           
           1、Java反射谈谈Java反射机制Java反射机制应用实践详解Java反射各种应用  
 总结
-为什么需要反射？ 因为Java不是动态语言，然而若要能有一种动态的机制，那么需要反射，例如在动态语言python中，我们可以动态的赋值，而不需要考虑具体的类型。为支持类似这一种机制引入了反射，反射是什么呢
+为什么需要反射？ 因为Java不是动态语言，然而若要能有一种动态的机制，那么需要反射，例如在动态语言python中，我们可以动态的赋值，而不需要考虑具体的类型。为支持类似这一种机制引入了反射，反射是什么呢？我的理解是能在程序运行时访问更改类信息，如方法变量等，以支持一种更加灵活操作类的行为。而这些行为又是很多框架所依赖的，例如在Spring中，需要读取XML文件，然后使用反射来创建类等。同时使用反射可以动态加载类，这样可使得程序更加灵活，不会对于未使用的类预先支付现金，而是在使用时，什么叫动态加载类
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1079,7 +1087,9 @@ ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；
         
           
           1. Java异常处理机制深入理解java异常处理机制Java异常处理总结   
-1. Java异常异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。
+1. Java异常异常指不期而至的各种状况，如：文件找不到、网络连接失败、非法参数等。异常是一个事件，它发生在程序运行期间，干扰了正常的指令流程。Java通 过API中Throwable类的众多子类描述各种不同的异常。因而，Java异常都是对象，是Throwable子类的实例，描述了出现在一段编码中的 错误条件。当条件生成时，错误将引发异常。  
+Error异常指程序无法处理的错误，表示运行应用程序中较严重问题。大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM（Java 虚拟机）出现的问题。  
+E
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1221,7 +1231,8 @@ ArrayList扩容(ensureCapacity)时大小为旧空间的3/2倍加1；
           
           1. Java内存模型全面理解Java内存模型volatile和synchronized的区别深入理解Java内存模型（一）  
 
-JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memo
+JMM决定一个线程对共享变量的写入何时对另一个线程可见,线程之间的共享变量存储在主内存（main memory）中，每个线程都有一个私有的本地内存（local memory），本地内存中存储了该线程以读/写共享变量的副本。JMM通过控制主内存与每个线程的本地内存之间的交互，来为java程序员提供内存可见性保证。
+所有原始类型(boolean,byte,short,char,int,long,float,double)的本地变量都直接保存在线程栈当中，对于它们的值各
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1402,7 +1413,7 @@ JMM决定一个线程对共享变量的写入何时对另一个线程可见,线�
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 

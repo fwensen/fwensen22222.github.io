@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -107,7 +107,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     motion: true,
@@ -370,7 +370,10 @@
 影响一些数据的可见性；      
 
 
-==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后
+==编译器和CPU==可以在保证输出结果一样的情况下对指令重排序，使性能得到优化。插入一个内存屏障，相当于告诉CPU和编译器先于这个命令的必须先执行，后域这个命令的必须后执行。    
+内存屏障的另一个作用是强制更新一次不同CPU的缓存。例如一个写屏障会把这个屏障前写入的数据刷新到缓存，这样任何视试图读取该数据的线程得到最新值，而不用考虑是被哪个CPU核心或者哪颗CPU执行的  
+
+这意味着如果你对一个volatile字段进行写操作，你必须知道：1、一旦你完成写入，
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -510,8 +513,9 @@
       
         
           
-          1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除
-          ...
+          1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除数据，所以不需要尾指针。2：重复利用数组，减少GC。3: 使用数组存储数据，可以利用缓存每次都加载一个cacheline的特性。  
+
+          
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/30/the-especial-of-disruptor/#more" rel="contents">
@@ -651,7 +655,7 @@
         
           
           缓冲行填充
-1. 计算机缓存分为L1， L2， L3，越靠近CPU越快，然而越小；2. 缓存由缓存行组成，一个缓存行一般是64字节；3. CPU实现中以一个缓存行作为单位处理， 所以如果两个long l1, l2放在一起，那么一般会被CPU同时读取；4. 如果线程1对l1变量(volatile lo
+1. 计算机缓存分为L1， L2， L3，越靠近CPU越快，然而越小；2. 缓存由缓存行组成，一个缓存行一般是64字节；3. CPU实现中以一个缓存行作为单位处理， 所以如果两个long l1, l2放在一起，那么一般会被CPU同时读取；4. 如果线程1对l1变量(volatile long)写入，那么它首先会加载l1所在的缓存行，这时该缓冲行中也包含l2，然后CPU会使其它加载了同一缓存行的线程中的缓存行无效，这样若线程2想写入l2变量，那么不得不再次从主存中取得该缓存行，相互之间造成了很大的冲突，所以使用了缓冲行填充的技巧：123public long p1, p2, p3, 
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -769,8 +773,9 @@
       
         
           
-          1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除
-          ...
+          1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行)2. 数组预先分配，减少GCRingbuffer的特别之处。1：减少竞争点，比如不删除数据，所以不需要尾指针。2：重复利用数组，减少GC。3: 使用数组存储数据，可以利用缓存每次都加载一个cacheline的特性。
+
+          
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/30/advantage-of-disruptor/#more" rel="contents">
@@ -910,7 +915,12 @@
         
           
           
-Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在监视的主服务器进入下线状态时，自动将下线主服务器属下的某台从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继
+Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在监视的主服务器进入下线状态时，自动将下线主服务器属下的某台从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继续处理命令请求；  
+
+所以Sentinel的功能肯定有Master选举，故障转移等；  
+当监视到server1的下线时长超过用户设定的下线时长上线时，Sentinel系统就会对server1执行故障转移操作：  
+
+首先，Sentinel系统会挑选server1属下的其中一种从服务器，并将这个被
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1055,7 +1065,13 @@ Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例�
 
 1. 旧版复制功能的实现复制功能包括两个：同步和命令传播。  
 
-同步操作作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态； 
+同步操作作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态；  
+命令传播操作则是同于在主服务器的数据库状态被修改，导致主从服务器的数据库状态处于不一致时，让主从服务器的数据库重新回到一致状态。  
+
+
+从服务器通过发送SYNC来同步主服务器，其主要步骤包括：  
+从服务器向主服务器发送SYNC命令；  
+收到SYNC命令的主服务器执行BGSAVE命令，在后台
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1197,7 +1213,9 @@ Sentinel是Redis的高可用性解决方案：由一个或多个Sentinel实例�
           
           一. RDB持久化未解决一旦服务器进程退出，服务器中的数据库状态(方便起见，服务器中的非空数据库以及它们的键值对统称数据库状态)也会消失不见的问题，Redis提供了RDB持久化功能，这个功能可以将Redis在内存中的数据库状态保存到磁盘里面，避免数据意外丢失。  
 1. RDB文件的创建和载入
-SA
+SAVE与BGSAVE命令用于生成RDB文件，不同在于前者会阻塞Redis服务器进程，直到RDB文件创建完毕为止；而后者则是派生出一个子进程，然后由子进程负责创建RDB文件；  
+服务器在启动时若检测到RDB文件存在，它就会自动载入RDB文件，但有以下条件；  
+如果服务器开启了AO持久化功能，那么服务
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1338,7 +1356,7 @@ SA
         
           
           Redis的对象包括：字符串对象、列表对象、哈希对象、集合对象以及有序集合对象；Redis的对象系统实现了基于引用计数技术的内存内存回收机制。此外使用了引用计数实现了对象共享。  
-1. 定义123456789101112131415161718192021222324252627282930313
+1. 定义1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859typedef struct redisObject &#123;    // 类型    unsigned type:4;    // 编码    unsigned encoding:4;
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1480,7 +1498,7 @@ SA
           
           1. 字典实现
 hash表结构  
-123456789101112131415161718192021/* * 哈希表 * * 每个字典都使用两个哈希表，从而实现渐进式 rehash 。 */typedef struct dictht &#123;        // 哈希表数组    dictEn
+123456789101112131415161718192021/* * 哈希表 * * 每个字典都使用两个哈希表，从而实现渐进式 rehash 。 */typedef struct dictht &#123;        // 哈希表数组    dictEntry **table;    // 哈希表大小    unsigned long size;        // 哈希表大小掩码，用于计算索引值    // 总是等于 size - 1    unsigned long sizemask;    // 该哈希表已有节点的数量    unsigned
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1806,7 +1824,7 @@ hash表结构
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Mist
   </a>
 </div>
 
