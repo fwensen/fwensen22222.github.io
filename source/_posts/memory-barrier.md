@@ -1,8 +1,8 @@
 ---
 title: 内存屏障
 date: 2017-06-30 22:49:49
-tags: Java, Disruptor
-categories: Disruptor
+tags: Disruptor
+categories: Java, Disruptor
 ---
 
 ### 1. 什么是内存屏障？

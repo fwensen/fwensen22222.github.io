@@ -1,8 +1,8 @@
 ---
 title: Ringbuffer的特别之处
 date: 2017-06-30 22:49:22
-tags: Java, Disruptor
-categories: Disruptor
+tags: Disruptor
+categories:Java, Disruptor
 ---
 
 ### 1. 它是数组实现，比链表快，而且有一个容易预测的访问模式(数组内元素的内存地址是连续存储的，同一缓存行中的数组会被预加载，**就如伪共享中所说，只要一个元素被加载到缓存行，其余相邻的几个元素也会被加载到同一个缓存行**)  
