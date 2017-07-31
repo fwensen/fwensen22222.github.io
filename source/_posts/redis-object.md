@@ -6,29 +6,28 @@ categories: Redis
 ---
 
 Redis的对象包括：字符串对象、列表对象、哈希对象、集合对象以及有序集合对象；
-Redis的对象系统实现了基于引用计数技术的内存内存回收机制。此外使用了引用计数实现了对象共享。  
-### 1. 定义  
-```C
+Redis的对象系统实现了基于引用计数技术的内存内存回收机制。此外使用了引用计数实现了对象共享。    
+### 1. 定义     
+```Java  
 typedef struct redisObject {
+	// 类型
+	unsigned type:4;
 
-    // 类型
-    unsigned type:4;
+	// 编码
+	unsigned encoding:4;
 
-    // 编码
-    unsigned encoding:4;
+	// 对象最后一次被访问的时间
+	unsigned lru:REDIS_LRU_BITS; /* lru time (relative to server.lruclock) */
 
-    // 对象最后一次被访问的时间
-    unsigned lru:REDIS_LRU_BITS; /* lru time (relative to server.lruclock) */
+	// 引用计数
+	int refcount;
 
-    // 引用计数
-    int refcount;
-
-    // 指向实际值的指针
-    void *ptr;
-} robj;
+	// 指向实际值的指针
+	void *ptr;
+} robj;  
 ```  
   
-#### 1. 类型    
+#### 1. 类型     
 键总是一个字符串对象，而值可以是任何一种对象，使用**TYPE命令**可以查查看给定键的值对应的值对象类型。  
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/224EBB316DFA4F65B2AD366BE6DEE9BF/7139)  
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/8130E3E151934C98A569F56880CE6180/7144)  
@@ -49,7 +48,6 @@ typedef struct redisObject {
 
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/F7267FBE66E84385A9BEDF178CC24BBC/7194)  
 
-
 ### 3. 列表对象  
 列表对象的编码可以是ziplist或者linkedlist;  
 如执行RPUSH numbers 1 "three" 5后，，则使用ziplist和linkedlist编码分别如下图示：  
@@ -67,12 +65,14 @@ typedef struct redisObject {
 
 1. 使用ziplist作为编码方式时，会将键和值放在一起存储，键在前值在后，以FIFO的方式放入；  
 2. 使用hashtable作为编码方式时，每个键都是一个字符串对象，每个值都是一个字符串对象； 
-举例如下：  
-```
+举例如下：    
+
+```Java  
 HSET profile name "Tom" 
 HSET profile age 25  
 HSET profile career "Programmer"
-```  
+```   
+
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/88DB715E43EB4A59A353E7733CBE5E6E/7244)  
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/A1FF84E8F94443AE801EC2DE4764A313/7246)  
 
@@ -81,7 +81,6 @@ HSET profile career "Programmer"
     - 键值对数量小于512个；不能满足以上两个中任一条件都将使用hashtable编码。同样也可以更改配置文件的方式更改默认值。  
 
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/0FC7714CB1EF4867817CDE76601097F1/7267)  
-
 
 ### 5. 集合对象  
 1. 集合对象可以使用intset或者hashtable；  
@@ -111,7 +110,6 @@ HSET profile career "Programmer"
     - 以上两个默认值可在配置文件中更改。  
 
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/0866CB807DE24C8F9E069C43AB56C52B/7318)  
-
 
 ### 6. 对象共享  
 Redis会共享值为0到9999的字符串对象。 
