@@ -9,7 +9,7 @@ categories: Database
 MyBatis由以下核心组件构成：  
 1. **SqlSessionBuilder**: 它根据配置信息(XML)或代码生成SqlSessionFactory工厂接口，其中XML方式是推荐的方式，因为这种方式可避免硬编码以及方便日后维护修改，避免重复编译代码；它的作用主要是**一个构建器，一旦构建了相应的SqlSessionFactry，作用便已完结，这时Java垃圾回收器便可回收它**。    
 2. **SqlSessionFactory**：生成SqlSession的工厂接口；生命期在整个MyBatis应用的生命期中，职责是创建SqlSession，为避免数据库连接的浪费，尽量使用单例模式。  
-3. **SqlSession**；这是用于执行SQL的核心组件，可用于发送SQL语句并返回结果，也可获取Mapper接口；相当于JDBC的一个Connection对象，所以生命期在一个SQL事务中，它是一个线程不安全的对象，所以在涉及多线程时需注意线程安全性，尽量放在finally语句中释放。  
+3. **SqlSession**；这是用于执行SQL的核心组件，可用于发送SQL语句并返回结果，也可获取Mapper接口；相当于JDBC的一个Connection对象，所以生命期在一个SQL事务中，它是一个线程不安全的对象，所以在涉及多线程时需注意线程安全性，同时尽量放在finally语句中以便释放。  
 4. **SQL Mapper**: 由一个Java接口和XML文件（或注解）构成，给出对应SQL语句的映射规则。它的生命期在一个SqlSession事务内，是一个方法级别的东西，使用完后尽量废弃掉。   
 
 #### SqlSessionFactory  
@@ -47,7 +47,7 @@ MyBatis由以下核心组件构成：
 映射器配置如下，放入单例类实现中：  
 ```
 InputStream inputStream = Resources.getResourceAsStream("config.xml");
-SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);  
+SqlSessionFactory sqlFactory = new SqlSessionFactoryBuilder().build(inputStream);  
 ```
 这样MyBatis的解析程序会将config.xml文件配置的信息解析到Configuration类对象里面，然后利用SqlSessionFactoryBuilder读取这个对象创建SqlSessionFactory。  
 
