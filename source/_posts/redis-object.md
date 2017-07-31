@@ -25,10 +25,10 @@ typedef struct redisObject {
 
     // 指向实际值的指针
     void *ptr;
-
 } robj;
-```    
-#### 1. 类型  
+```  
+  
+#### 1. 类型    
 键总是一个字符串对象，而值可以是任何一种对象，使用**TYPE命令**可以查查看给定键的值对应的值对象类型。  
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/224EBB316DFA4F65B2AD366BE6DEE9BF/7139)  
 ![](http://note.youdao.com/yws/public/resource/ec373eb8fb08bab5885484b5dcf7aea9/xmlnote/8130E3E151934C98A569F56880CE6180/7144)  
