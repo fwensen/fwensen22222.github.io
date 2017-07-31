@@ -54,6 +54,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
 #### SqlSession  
 它是一个接口类，扮演着门面的作用，真正工作的事Excutor接口。  
 在构建好SqlSessionFactory后，就可用工厂类生成MyBatis的门面类SqlSession，它类似于JDBC中的Connection接口对象。  
+
 ```Java  
 SqlSession sqlSession = null;
 try {
@@ -67,7 +68,8 @@ try {
 		sqlSession.close();
 	}
 }
-```  
+```    
+
 
 #### SQL Mapper  
 映射器由Java接口和XML文件（或注解）构成，作用如下：  
@@ -77,7 +79,8 @@ try {
 - 定义查询结果和POJO的映射关系。  
 推荐使用XML方式。  
 
-示例：  
+
+#### 示例：  
 1. Java接口    
 ```  
 public interface RoleMapper {
@@ -85,6 +88,7 @@ public interface RoleMapper {
 	public Role getRole(Long id); 
 }  
 ```  
+
 2. XML映射文件   
 ```  
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -99,31 +103,27 @@ public interface RoleMapper {
 		select id, role_name as roleName, note from t_role where id = #{id}
 	</select>
 </mapper>
-```  
-XML文件的作用：  
-- 这个文件在前文的config.xml中已经配置了的，见其中的<mappers/>     
+```    
 
-- 定义了一个命名空间为xxx.yyy.zzz.mapper.RoleMapper的SQL Mapper，这个命名空间和我们定义的接口的全限定名一致；  
-- 用一个select元素定义了一个查询SQL，见其中的注释，注意其中的role为别名。  
+    XML文件的作用：  
+    - 这个文件在前文的config.xml中已经配置了的，见其中的<mappers/>     
+    - 定义了一个命名空间为xxx.yyy.zzz.mapper.RoleMapper的SQL Mapper，这个命名空间和我们定义的接口的全限定名一致；  
+    - 用一个select元素定义了一个查询SQL，见其中的注释，注意其中的role为别名。  
 
 3. POJO类  
 ```Java
 public class Role {
 
 	private long id;
-	
 	private String roleName;  
-	
 	private String note;  
-	
 	// setter/getter
 }
-```
+```    
 
 4. 使用  
 ``` Java
 RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);  
 Role role = roleMapper.getRole(1L);
-
-```  
+```   
 这样便完成了一次查询。  
