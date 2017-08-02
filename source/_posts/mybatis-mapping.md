@@ -5,9 +5,8 @@ tags: MyBatis
 categories: Database
 ---
 
-### 映射器  
 MyBatis的映射器提供强大的映射功能，这也是MyBatis的核心功能。  
-### 1. select元素  
+### 一、 select元素  
 select元素中最主要的几个元素四parameterType、resultType、resultMap等。其中parameterType表示参数类型，可给出类别名或类全名以及MyBatis内部定义类型，resultType表示返回值类型，resultMap帮助我们执行强大的自定义映射功能。  
 
 #### 1. 自动映射  
@@ -161,7 +160,7 @@ public class RoleParam {
 这样select语句不再需要自动映射便可完成规则的映射。
 
 
-### 2. insert元素
+### 二、 insert元素
 
 insert相对select元素简单得多，MyBatis在执行插入后会返回整数表示插入的记录数。
 
@@ -179,11 +178,11 @@ insert相对select元素简单得多，MyBatis在执行插入后会返回整数�
 这样传入的role对象就无需设置id的值，MyBatis会用数据库的设置进行处理。
 
 
-### 3. update元素和delete元素
+### 三、 update元素和delete元素
 
 和insert一样，也会返回一个整数表示执行后影响的记录条数。
 
-### 4. 特殊字符串替换和处理(#和$)
+### 四、 特殊字符串替换和处理(#和$)
 
 - 在参数#{name}中，MyBatis会用创建预编译的语句，然后MyBatis设值；
 - 而在参数${name}中，可传递SQL语句本身，而不是SQL所需的参数，这样MyBatis帮我们转译name，变成直出，而不是作为参数设置。
