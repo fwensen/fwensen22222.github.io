@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Kafka," />
+  <meta name="keywords" content="TCPIP," />
 
 
 
@@ -93,18 +93,23 @@
 
 
 
-<meta name="description" content="学习资料 官方文档  Kafka学习之路 Kafka技术分享 Kafka中文教程   基础知识* 学习笔记 Kafka学习问题列表 Kafka设计 Kafka设计解析（一）- Kafka背景及架构介绍 Kafka设计解析（二）- Kafka High Availability （上）">
-<meta name="keywords" content="Kafka">
+<meta name="description" content="1.状态转移图 报文Sequence Number是包的序号，用来解决网络包乱序（reordering）问题。Acknowledgement Number就是ACK——用于确认收到，用来解决不丢包的问题。Window又叫Advertised-Window，也就是著名的滑动窗口（Sliding Window），用于解决流控的。TCP Flag ，也就是包的类型，主要是用于操控TCP的状态机的。 状态">
+<meta name="keywords" content="TCPIP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kafka知识">
-<meta property="og:url" content="http://fwensen.github.io/2017/03/22/kafka-knownage/index.html">
+<meta property="og:title" content="TCPIP知识一">
+<meta property="og:url" content="http://fwensen.github.io/2017/03/18/tcp-knownage-1/index.html">
 <meta property="og:site_name" content="Vincent&#39;s Blog">
-<meta property="og:description" content="学习资料 官方文档  Kafka学习之路 Kafka技术分享 Kafka中文教程   基础知识* 学习笔记 Kafka学习问题列表 Kafka设计 Kafka设计解析（一）- Kafka背景及架构介绍 Kafka设计解析（二）- Kafka High Availability （上）">
+<meta property="og:description" content="1.状态转移图 报文Sequence Number是包的序号，用来解决网络包乱序（reordering）问题。Acknowledgement Number就是ACK——用于确认收到，用来解决不丢包的问题。Window又叫Advertised-Window，也就是著名的滑动窗口（Sliding Window），用于解决流控的。TCP Flag ，也就是包的类型，主要是用于操控TCP的状态机的。 状态">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-02T16:29:13.000Z">
+<meta property="og:image" content="http://coolshell.cn//wp-content/uploads/2014/05/TCP-Header-01.jpg">
+<meta property="og:image" content="http://coolshell.cn//wp-content/uploads/2014/05/tcpfsm.png">
+<meta property="og:image" content="http://coolshell.cn//wp-content/uploads/2014/05/tcp_open_close.jpg">
+<meta property="og:image" content="http://coolshell.cn//wp-content/uploads/2014/05/tcpclosesimul.png">
+<meta property="og:updated_time" content="2017-08-02T16:43:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kafka知识">
-<meta name="twitter:description" content="学习资料 官方文档  Kafka学习之路 Kafka技术分享 Kafka中文教程   基础知识* 学习笔记 Kafka学习问题列表 Kafka设计 Kafka设计解析（一）- Kafka背景及架构介绍 Kafka设计解析（二）- Kafka High Availability （上）">
+<meta name="twitter:title" content="TCPIP知识一">
+<meta name="twitter:description" content="1.状态转移图 报文Sequence Number是包的序号，用来解决网络包乱序（reordering）问题。Acknowledgement Number就是ACK——用于确认收到，用来解决不丢包的问题。Window又叫Advertised-Window，也就是著名的滑动窗口（Sliding Window），用于解决流控的。TCP Flag ，也就是包的类型，主要是用于操控TCP的状态机的。 状态">
+<meta name="twitter:image" content="http://coolshell.cn//wp-content/uploads/2014/05/TCP-Header-01.jpg">
 
 
 
@@ -132,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://fwensen.github.io/2017/03/22/kafka-knownage/"/>
+  <link rel="canonical" href="http://fwensen.github.io/2017/03/18/tcp-knownage-1/"/>
 
 
 
 
 
-  <title>kafka知识 | Vincent's Blog</title>
+  <title>TCPIP知识一 | Vincent's Blog</title>
   
 
 
@@ -277,7 +282,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/03/22/kafka-knownage/">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/03/18/tcp-knownage-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent">
@@ -294,7 +299,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">kafka知识</h1>
+          <h1 class="post-title" itemprop="name headline">TCPIP知识一</h1>
         
 
         <div class="post-meta">
@@ -306,8 +311,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-22T00:27:59+08:00">
-                2017-03-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-18T00:41:55+08:00">
+                2017-03-18
               </time>
             
 
@@ -329,8 +334,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/消息队列/" itemprop="url" rel="index">
-                    <span itemprop="name">消息队列</span>
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
                   </a>
                 </span>
 
@@ -363,21 +368,15 @@
       
 
       
-        <hr>
-<h3 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h3><ul>
-<li><a href="http://kafka.apache.org/documentation/" target="_blank" rel="external">官方文档</a> </li>
-<li><a href="http://www.cnblogs.com/huxi2b/p/6308999.html" target="_blank" rel="external">Kafka学习之路</a></li>
-<li><a href="http://blog.csdn.net/lizhitao/article/details/39499283" target="_blank" rel="external">Kafka技术分享</a></li>
-<li><a href="http://orchome.com/kafka/index" target="_blank" rel="external">Kafka中文教程</a></li>
+        <h3 id="1-状态转移图"><a href="#1-状态转移图" class="headerlink" title="1.状态转移图"></a>1.状态转移图</h3><ul>
+<li><h3 id="报文"><a href="#报文" class="headerlink" title="报文"></a>报文</h3><img src="http://coolshell.cn//wp-content/uploads/2014/05/TCP-Header-01.jpg" alt="报文"><br>Sequence Number是包的序号，用来解决网络包乱序（reordering）问题。<br>Acknowledgement Number就是ACK——用于确认收到，用来解决不丢包的问题。<br>Window又叫Advertised-Window，也就是著名的滑动窗口（Sliding Window），用于解决流控的。<br>TCP Flag ，也就是包的类型，主要是用于操控TCP的状态机的。</li>
+<li><h3 id="状态转移图"><a href="#状态转移图" class="headerlink" title="状态转移图"></a>状态转移图</h3><img src="http://coolshell.cn//wp-content/uploads/2014/05/tcpfsm.png" alt="状态转移图"></li>
+<li><h3 id="TCP三次握手四次挥手"><a href="#TCP三次握手四次挥手" class="headerlink" title="TCP三次握手四次挥手"></a>TCP三次握手四次挥手</h3><img src="http://coolshell.cn//wp-content/uploads/2014/05/tcp_open_close.jpg" alt="TCP三次握手四次挥手"></li>
+<li><h3 id="为什么建链接要3次握手，断链接需要4次挥手？"><a href="#为什么建链接要3次握手，断链接需要4次挥手？" class="headerlink" title="为什么建链接要3次握手，断链接需要4次挥手？"></a>为什么建链接要3次握手，断链接需要4次挥手？</h3></li>
+<li>对于建链接的3次握手，主要是要初始化Sequence Number 的初始值。通信的双方要互相通知对方自己的初始化的Sequence Number（缩写为ISN：Inital Sequence Number）——所以叫SYN，全称Synchronize Sequence Numbers。也就上图中的 x 和 y。这个号要作为以后的数据通信的序号，以保证应用层接收到的数据不会因为网络上的传输的问题而乱序（TCP会用这个序号来拼接数据）。</li>
+<li>对于4次挥手，其实你仔细看是2次，因为TCP是全双工的，所以，发送方和接收方都需要Fin和Ack。只不过，有一方是被动的，所以看上去就成了所谓的4次挥手。如果两边同时断连接，那就会就进入到CLOSING状态，然后到达TIME_WAIT状态。下图是双方同时断连接的示意图（你同样可以对照着TCP状态机看）：<br><img src="http://coolshell.cn//wp-content/uploads/2014/05/tcpclosesimul.png" alt=""></li>
 </ul>
-<hr>
-<h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><h2 id=""><a href="#" class="headerlink" title="* "></a>* </h2><h3 id="学习笔记"><a href="#学习笔记" class="headerlink" title="学习笔记"></a>学习笔记</h3><ul>
-<li><a href="http://note.youdao.com/noteshare?id=529257dbc90cb0de6922fc8c60f92b7c&amp;sub=4CE548C21D5347CBA225F80ED9A7BE82" target="_blank" rel="external">Kafka学习问题列表</a></li>
-<li><a href="http://note.youdao.com/noteshare?id=1ed559053145184d3aa88883ee7bda75&amp;sub=090277AE12934FA0B8524CC07307985C" target="_blank" rel="external">Kafka设计</a></li>
-<li><a href="http://note.youdao.com/noteshare?id=448ab37a0100cdae5e19cebf7fd22e69&amp;sub=2C5A8FA3B33648A6803F8360D4A92AAE" target="_blank" rel="external">Kafka设计解析（一）- Kafka背景及架构介绍</a></li>
-<li><a href="http://note.youdao.com/noteshare?id=0c9dd13ac2c175306f3ee26ae24a5416&amp;sub=6975D24E61454F639FE6B39EDE8D78D7" target="_blank" rel="external">Kafka设计解析（二）- Kafka High Availability （上）</a></li>
-</ul>
-
+<h3 id="参考文章：http-coolshell-cn-articles-11564-html"><a href="#参考文章：http-coolshell-cn-articles-11564-html" class="headerlink" title="参考文章：http://coolshell.cn/articles/11564.html"></a>参考文章：<a href="http://coolshell.cn/articles/11564.html" target="_blank" rel="external">http://coolshell.cn/articles/11564.html</a></h3>
       
     </div>
 
@@ -406,7 +405,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+            <a href="/tags/TCPIP/" rel="tag"># TCPIP</a>
           
         </div>
       
@@ -419,8 +418,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/18/tcp-knownage-1/" rel="next" title="TCPIP知识一">
-                <i class="fa fa-chevron-left"></i> TCPIP知识一
+              <a href="/2017/03/02/java-concurrent/" rel="next" title="Java并发技术">
+                <i class="fa fa-chevron-left"></i> Java并发技术
               </a>
             
           </div>
@@ -429,8 +428,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/03/Java-base-1/" rel="prev" title="Java基础一">
-                Java基础一 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/03/22/kafka-knownage/" rel="prev" title="kafka知识">
+                kafka知识 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -572,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#学习资料"><span class="nav-number">1.</span> <span class="nav-text">学习资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础知识"><span class="nav-number">2.</span> <span class="nav-text">基础知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number"></span> <span class="nav-text">* </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#学习笔记"><span class="nav-number">1.</span> <span class="nav-text">学习笔记</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-状态转移图"><span class="nav-number">1.</span> <span class="nav-text">1.状态转移图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报文"><span class="nav-number">2.</span> <span class="nav-text">报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#状态转移图"><span class="nav-number">3.</span> <span class="nav-text">状态转移图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP三次握手四次挥手"><span class="nav-number">4.</span> <span class="nav-text">TCP三次握手四次挥手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么建链接要3次握手，断链接需要4次挥手？"><span class="nav-number">5.</span> <span class="nav-text">为什么建链接要3次握手，断链接需要4次挥手？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章：http-coolshell-cn-articles-11564-html"><span class="nav-number">6.</span> <span class="nav-text">参考文章：http://coolshell.cn/articles/11564.html</span></a></li></ol></div>
             
 
           </div>
