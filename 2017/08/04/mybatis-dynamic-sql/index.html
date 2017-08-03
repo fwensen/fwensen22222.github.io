@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MyBatis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="MyBatis的动态SQL功能帮助我们免去拼装复杂SQL语句的麻烦。它有几个主要的元素。    元素 作用       if 判断语句    choose(when,otherwise) 相当于Java中的case when语句    trim 辅助元素，用于处理一些SQL拼装问题    foreach 循环语句，在in语句等列举条件中常用    if元素相当于Java中if语句，常与test属性">
+<meta name="keywords" content="MyBatis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MyBatis动态语句">
+<meta property="og:url" content="http://fwensen.github.io/2017/08/04/mybatis-dynamic-sql/index.html">
+<meta property="og:site_name" content="Vincent&#39;s Blog">
+<meta property="og:description" content="MyBatis的动态SQL功能帮助我们免去拼装复杂SQL语句的麻烦。它有几个主要的元素。    元素 作用       if 判断语句    choose(when,otherwise) 相当于Java中的case when语句    trim 辅助元素，用于处理一些SQL拼装问题    foreach 循环语句，在in语句等列举条件中常用    if元素相当于Java中if语句，常与test属性">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-03T16:38:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MyBatis动态语句">
+<meta name="twitter:description" content="MyBatis的动态SQL功能帮助我们免去拼装复杂SQL语句的麻烦。它有几个主要的元素。    元素 作用       if 判断语句    choose(when,otherwise) 相当于Java中的case when语句    trim 辅助元素，用于处理一些SQL拼装问题    foreach 循环语句，在in语句等列举条件中常用    if元素相当于Java中if语句，常与test属性">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fwensen.github.io/2017/08/04/mybatis-dynamic-sql/"/>
+
+
+
+
+
+  <title>MyBatis动态语句 | Vincent's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vincent's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/08/04/mybatis-dynamic-sql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vincent's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MyBatis动态语句</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-04T00:38:03+08:00">
+                2017-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Database/" itemprop="url" rel="index">
+                    <span itemprop="name">Database</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>MyBatis的动态SQL功能帮助我们免去拼装复杂SQL语句的麻烦。<br>它有几个主要的元素。</p>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th>作用 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> if</td>
+<td>判断语句</td>
+</tr>
+<tr>
+<td> choose(when,otherwise)</td>
+<td>相当于Java中的case when语句</td>
+</tr>
+<tr>
+<td> trim</td>
+<td>辅助元素，用于处理一些SQL拼装问题</td>
+</tr>
+<tr>
+<td> foreach</td>
+<td>循环语句，在in语句等列举条件中常用</td>
+</tr>
+</tbody>
+</table>
+<h3 id="if元素"><a href="#if元素" class="headerlink" title="if元素"></a>if元素</h3><p>相当于Java中if语句，常与test属性联合使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;select id=<span class="string">"findRoles"</span> parameterType=<span class="string">"string"</span> resultMap=<span class="string">"roleResultMap"</span>&gt;</div><div class="line">	select role_no, role_name, note from t_role where <span class="number">1</span>=<span class="number">1</span></div><div class="line">	&lt;<span class="keyword">if</span> test=<span class="string">"rolenaName != null and roleName != ''"</span>&gt; </div><div class="line">		<span class="function">and role_name like <span class="title">concat</span><span class="params">(<span class="string">'%'</span>, #&#123;roleName&#125;, <span class="string">'%'</span>)</span></span></div><div class="line"><span class="function">	&lt;/<span class="keyword">if</span>&gt;</span></div><div class="line"><span class="function">&lt;/selecr&gt;</span></div></pre></td></tr></table></figure>
+<p>上面语句的含义是我们将参数roleName传递进入到映射器中，如果这个参数为空，我们就不去构造这个条件。这里的1=1语句主要用于拼接。</p>
+<h3 id="choose、when、otherwise元素"><a href="#choose、when、otherwise元素" class="headerlink" title="choose、when、otherwise元素"></a>choose、when、otherwise元素</h3><p>类似于Java中的switch..case..default语句。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;select id=<span class="string">"findRiles"</span> parameterType=<span class="string">"role"</span> resultMap=<span class="string">"roleResultMap"</span>&gt;</div><div class="line">	select role_no, role_name, note from t_role where <span class="number">1</span>=<span class="number">1</span></div><div class="line">	&lt;choose&gt;</div><div class="line">		&lt;when test=<span class="string">"roleNo != null and roleNo != ''"</span>&gt;</div><div class="line">			and role_no = #&#123;roleNo&#125;</div><div class="line">		&lt;/when&gt;</div><div class="line">		&lt;when test=<span class="string">"roleName != null and roleName != ''"</span>&gt;</div><div class="line">			<span class="function">and role_name like <span class="title">concat</span><span class="params">(<span class="string">'%'</span>, #&#123;roleName&#125;, <span class="string">'%'</span>)</span></span></div><div class="line"><span class="function">		&lt;/when&gt;</span></div><div class="line"><span class="function">		&lt;otherwise&gt;</span></div><div class="line"><span class="function">			and note is not <span class="keyword">null</span></span></div><div class="line"><span class="function">		&lt;/otherwise&gt;</span></div><div class="line"><span class="function">	&lt;/choose&gt;</span></div><div class="line"><span class="function">&lt;/select&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的语句表示当roleNo不为空那么条件使用role_no = #{roleNo}，如果roleNo为空，那么判断roleName是否为空，不为空则将role_name like concat(‘%’, #{roleName}, ‘%’)加入where语句，前面两个条件都不满足时，则将note is not null加入where语句。</p>
+<h3 id="trim、where、set元素"><a href="#trim、where、set元素" class="headerlink" title="trim、where、set元素"></a>trim、where、set元素</h3><p>这几个元素主要作用帮助我们拼装，例如前面的判断语句都有一个1=1语句，使用where我们可以去掉这条语句。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;select id=<span class="string">"findRoles"</span> parameterTypes=<span class="string">"string"</span> resultMap=<span class="string">"roleResultMap"</span>&gt;</div><div class="line">	select role_no, role_name, note from t_role</div><div class="line">	&lt;where&gt;</div><div class="line">	&lt;<span class="keyword">if</span> test=<span class="string">"roleName != null and roleName != ''"</span>&gt;</div><div class="line">		<span class="function">and role_name like <span class="title">concat</span><span class="params">(<span class="string">'%'</span>, #&#123;roleName, <span class="string">'%'</span>&#125;)</span></span></div><div class="line"><span class="function">	&lt;/<span class="keyword">if</span>&gt;</span></div><div class="line"><span class="function">	&lt;/where&gt;</span></div><div class="line"><span class="function">&lt;/select&gt;</span></div></pre></td></tr></table></figure>
+<p>只有where里面的条件成立时才加入where这个SQL到组装的SQL语句中，否则不加入。</p>
+<p>trim可以帮助我们去掉一些特殊的SQL语法，比如常见的and, or。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;select id=<span class="string">"findRoles"</span> parameterTypes=<span class="string">"string"</span> resultMap=<span class="string">"roleResultMap"</span>&gt;</div><div class="line">	select role_no, role_name, note from t_note</div><div class="line">	&lt;trim prefix=<span class="string">"where"</span> prefixOverrides=<span class="string">"and"</span>&gt;</div><div class="line">		&lt;<span class="keyword">if</span> test=<span class="string">"roleName != null and roleName != ''"</span>&gt;</div><div class="line">			<span class="function">and role_name like <span class="title">concat</span><span class="params">(<span class="string">'%'</span>, #&#123;roleName&#125;, <span class="string">'%'</span>)</span></span></div><div class="line"><span class="function">		&lt;/<span class="keyword">if</span>&gt;</span></div><div class="line"><span class="function">	&lt;/trim&gt;</span></div><div class="line"><span class="function">&lt;/select&gt;</span></div></pre></td></tr></table></figure>
+<p>trim元素意味着需要去掉一些特殊的字符串，prefix表示语句前缀，prefixOverrides代表你需要去掉哪种字符串，上面的写法和where基本等效。</p>
+<p>在Hibernate中我们常常需要更新某一对象，会发送所有的字段给持久化对象，然而当我们只想更新一个字段，若发送所有属性去更新，对网络带宽消耗较大，最佳的方式是只发送主键和待更新的字段。</p>
+<p>在MyBatis中，常常使用set元素完成仅发送更新字段的功能。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;update id=<span class="string">"updateRole"</span> parameterType=<span class="string">"role"</span>&gt;</div><div class="line">	update t_role</div><div class="line">	&lt;set&gt;</div><div class="line">		&lt;<span class="keyword">if</span> test=<span class="string">"roleName != null and roleName != ''"</span>&gt;</div><div class="line">			role_name = #&#123;roleName&#125;,</div><div class="line">		&lt;/if&gt;</div><div class="line">		&lt;<span class="keyword">if</span> test=<span class="string">"note != null and note != ''"</span>&gt;</div><div class="line">			note = #&#123;note&#125;</div><div class="line">		&lt;/if&gt;</div><div class="line">	&lt;/set&gt;</div><div class="line">	where role_no = #&#123;roleNo&#125;</div><div class="line">&lt;/update&gt;</div></pre></td></tr></table></figure>
+<p>set元素遇到都好，它会自动把对应的逗号去掉。如果我们自己编写那将是多次的判断，使用set，MyBatis就会根据参数的规则进行动态SQL组装，这样能避免全部字段更新的麻烦。</p>
+<h3 id="foreach元素"><a href="#foreach元素" class="headerlink" title="foreach元素"></a>foreach元素</h3><p>foreach元素的作用是遍历集合，它能很好的支持数组、List、Set接口的集合，提供遍历的功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;select id=<span class="string">"findUserBySex"</span> resultMap=<span class="string">"user"</span>&gt;</div><div class="line">	select * from t_user where sex in</div><div class="line">	&lt;foreach item=<span class="string">"sex"</span> index=<span class="string">"index"</span> collection=<span class="string">"sexLisr"</span> open=<span class="string">"("</span> separator=<span class="string">","</span> close=<span class="string">")"</span>&gt;</div><div class="line">		#&#123;sex&#125;</div><div class="line">	&lt;foreach&gt;</div><div class="line">&lt;select&gt;</div></pre></td></tr></table></figure>
+<p>item是循环中当前的元素，index是当前元素在集合中的索引下标，collection的sexList是传递进来的参数名称，可以数组、map、set等，open和close表示以什么符号将这些集合元素包装起来，separator是各个元素的间隔符。</p>
+<p>所以若sexList为[male, female, null]，则拼装的SQL语句为select * from t_user where sex in (male, female, null)<br>使用时注意集合的长度，太长会影响性能。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MyBatis/" rel="tag"># MyBatis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/03/mybatis-resultMap/" rel="next" title="MyBatis resultMap">
+                <i class="fa fa-chevron-left"></i> MyBatis resultMap
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Vincent" />
+          <p class="site-author-name" itemprop="name">Vincent</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fwensen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#if元素"><span class="nav-number">1.</span> <span class="nav-text">if元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#choose、when、otherwise元素"><span class="nav-number">2.</span> <span class="nav-text">choose、when、otherwise元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#trim、where、set元素"><span class="nav-number">3.</span> <span class="nav-text">trim、where、set元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#foreach元素"><span class="nav-number">4.</span> <span class="nav-text">foreach元素</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vincent</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
