@@ -209,7 +209,7 @@ StudentLectureBean包含一个lecture属性用来读取的课程信息，这里�
 
 student.xml文件中使用collection关联StudentLectureBean，其中column对应SQL列名，这里用id，属性是Student的studentLectureList, 而配置的select为findStudentLectureByStuId，那么MyBatis就会启用这条语句来加载数据。这里用StudentLectureBean去级联LectureBean信息，它使用了列lecture_id作为参数，用对应的select语句进行加载。
 
-##### 3. discriminator鉴别器级联
+#### 3. discriminator鉴别器级联
 
 理解鉴别器最好的例子是switch语句，它有类似的功能。
 例如我们根据sex字段得到男女学生，那么：
