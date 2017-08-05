@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20150315165508885?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 <meta property="og:image" content="http://img.blog.csdn.net/20140105211344671">
 <meta property="og:image" content="http://img.blog.csdn.net/20140105211242593">
-<meta property="og:updated_time" content="2017-08-05T13:43:04.000Z">
+<meta property="og:updated_time" content="2017-08-05T13:54:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM知识总结">
 <meta name="twitter:description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader）:在JVM启动时或者在类运行时将需要的class加载到JVM中。（右图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考http://blog.csdn.net/tonytfjing/article/details/47212291）2. 执行引擎：负责执行">
@@ -467,8 +467,12 @@
 </li>
 </ol>
 <ul>
-<li>G1收集器<br>G1(Garbage First)收集器是JDK1.7提供的一个新收集器，G1收集器基于“标记-整理”算法实现，也就是说不会产生内存碎片。还有一个特点之前的收集器进行收集的范围都是整个新生代或老年代，而G1将整个Java堆(包括新生代，老年代)。  </li>
+<li>G1收集器  </li>
 </ul>
+<p>G1全称是Garbage First Garbage Collector，使用G1的目的是简化性能优化的复杂性。例如，G1的主要输入参数是初始化和最大Java堆大小、最大GC中断时间。</p>
+<p>G1 GC由Young Generation和Old Generation组成。G1将Java堆空间分割成了若干个Region，即年轻代/老年代是一系列Region的集合，这就意味着在分配空间时不需要一个连续的内存区间，即不需要在JVM启动时决定哪些Region属于老年代，哪些属于年轻代。因为随着时间推移，年轻代Region被回收后，又会变为可用状态（后面会说到的Unused Region或Available Region）了。</p>
+<p>G1年轻代收集器是并行Stop-the-world收集器，和其他的HotSpot GC一样，当一个年轻代GC发生时，整个年轻代被回收。G1的老年代收集器有所不同，它在老年代不需要整个老年代回收，只有一部分Region被调用。</p>
+<p>G1 GC的年轻代由Eden Region和Survivor Region组成。当一个JVM分配Eden Region失败后就触发一个年轻代回收，这意味着Eden区间满了。然后GC开始释放空间，第一个年轻代收集器会移动所有的存储对象从Eden Region到Survivor Region，这就是“Copy to Survivor”过程。</p>
 <h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><ol>
 <li><a href="http://blog.csdn.net/moneyshi/article/details/53033577" target="_blank" rel="external">VM结构、GC工作机制详解</a>    </li>
 <li><a href="http://blog.csdn.net/java2000_wl/article/details/8030172" target="_blank" rel="external">Java虚拟机学习 - 垃圾收集器</a>  </li>
