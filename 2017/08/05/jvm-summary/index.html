@@ -93,22 +93,22 @@
 
 
 
-<meta name="description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（右图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
+<meta name="description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（下图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
 <meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM知识总结">
 <meta property="og:url" content="http://fwensen.github.io/2017/08/05/jvm-summary/index.html">
 <meta property="og:site_name" content="Vincent&#39;s Blog">
-<meta property="og:description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（右图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
+<meta property="og:description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（下图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20150315165523065?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 <meta property="og:image" content="http://img.blog.csdn.net/20150315165508885?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 <meta property="og:image" content="http://img.blog.csdn.net/20140105211344671">
 <meta property="og:image" content="http://img.blog.csdn.net/20140105211242593">
-<meta property="og:updated_time" content="2017-08-05T13:58:21.000Z">
+<meta property="og:updated_time" content="2017-08-05T13:59:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM知识总结">
-<meta name="twitter:description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（右图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
+<meta name="twitter:description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（下图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20150315165523065?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 
 
@@ -350,7 +350,7 @@
 <p>这篇文章是对网上一些关于JVM博客的一个集合</p>
 </blockquote>
 <h3 id="一、JVM结构"><a href="#一、JVM结构" class="headerlink" title="一、JVM结构"></a>一、JVM结构</h3><p><img src="http://img.blog.csdn.net/20150315165523065?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""><br><img src="http://img.blog.csdn.net/20150315165508885?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="">  </p>
-<h4 id="1-类加载器（ClassLoader"><a href="#1-类加载器（ClassLoader" class="headerlink" title="1. 类加载器（ClassLoader)"></a>1. 类加载器（ClassLoader)</h4><p>在JVM启动时或者在类运行时将需要的class加载到JVM中。（右图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以<a href="http://blog.csdn.net/tonytfjing/article/details/47212291" target="_blank" rel="external">参考</a></p>
+<h4 id="1-类加载器（ClassLoader"><a href="#1-类加载器（ClassLoader" class="headerlink" title="1. 类加载器（ClassLoader)"></a>1. 类加载器（ClassLoader)</h4><p>在JVM启动时或者在类运行时将需要的class加载到JVM中。（下图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以<a href="http://blog.csdn.net/tonytfjing/article/details/47212291" target="_blank" rel="external">参考</a></p>
 <h4 id="2-执行引擎"><a href="#2-执行引擎" class="headerlink" title="2. 执行引擎"></a>2. 执行引擎</h4><p>负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构）</p>
 <h4 id="3-内存区（也叫运行时数据区）"><a href="#3-内存区（也叫运行时数据区）" class="headerlink" title="3. 内存区（也叫运行时数据区）"></a>3. 内存区（也叫运行时数据区）</h4><p>是在JVM运行的时候操作所分配的内存区。运行时内存区主要可以划分为5个区域：</p>
 <ul>
