@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Algorithm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="剑指offer总结 1. 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。 这个是典型的二分查找，直接使用传统的二分查找即可  123456789101112131415161718192021public boolean Find(int target, int [][] arr">
+<meta name="keywords" content="Algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer总结">
+<meta property="og:url" content="http://fwensen.github.io/2017/08/07/data-structure-algo-offer/index.html">
+<meta property="og:site_name" content="Vincent&#39;s Blog">
+<meta property="og:description" content="剑指offer总结 1. 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。 这个是典型的二分查找，直接使用传统的二分查找即可  123456789101112131415161718192021public boolean Find(int target, int [][] arr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-06T16:25:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="剑指offer总结">
+<meta name="twitter:description" content="剑指offer总结 1. 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。 这个是典型的二分查找，直接使用传统的二分查找即可  123456789101112131415161718192021public boolean Find(int target, int [][] arr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fwensen.github.io/2017/08/07/data-structure-algo-offer/"/>
+
+
+
+
+
+  <title>剑指offer总结 | Vincent's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Vincent's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fwensen.github.io/2017/08/07/data-structure-algo-offer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Vincent's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">剑指offer总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-07T00:24:33+08:00">
+                2017-08-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Data-structure-and-algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Data structure and algorithm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>剑指offer总结</p>
+<h4 id="1-在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。"><a href="#1-在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。" class="headerlink" title="1. 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。"></a>1. 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。</h4><blockquote>
+<p>这个是典型的二分查找，直接使用传统的二分查找即可</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">Find</span><span class="params">(<span class="keyword">int</span> target, <span class="keyword">int</span> [][] array)</span> </span>&#123;</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> (array == <span class="keyword">null</span> || array[<span class="number">0</span>].length == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">final</span> <span class="keyword">int</span> row = array.length;</div><div class="line">		<span class="keyword">final</span> <span class="keyword">int</span> col = array[<span class="number">0</span>].length;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; row; i++) &#123;</div><div class="line">			</div><div class="line">			<span class="keyword">int</span> lo = <span class="number">0</span>, hi = col-<span class="number">1</span>;</div><div class="line">			<span class="keyword">while</span> (lo &lt;= hi) &#123;</div><div class="line">				<span class="keyword">int</span> mid = (lo + hi)/<span class="number">2</span>;</div><div class="line">				<span class="keyword">if</span> (array[i][mid] == target) &#123;</div><div class="line">					<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (array[i][mid] &lt; target) &#123;</div><div class="line">					lo = mid + <span class="number">1</span>;</div><div class="line">				&#125; <span class="keyword">else</span> &#123;</div><div class="line">					hi = mid - <span class="number">1</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h4 id="2-把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。-输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。-例如数组-3-4-5-1-2-为-1-2-3-4-5-的一个旋转，该数组的最小值为1。-NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。"><a href="#2-把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。-输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。-例如数组-3-4-5-1-2-为-1-2-3-4-5-的一个旋转，该数组的最小值为1。-NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。" class="headerlink" title="2. 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。 输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。 NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。"></a>2. 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。 输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。 NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。</h4><blockquote>
+<p>这也是一个典型二分查找问题。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minNumberInRotateArray</span><span class="params">(<span class="keyword">int</span> [] array)</span> </span>&#123;</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> (array == <span class="keyword">null</span> || array.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">		<span class="keyword">int</span> left = <span class="number">0</span>, right = array.length - <span class="number">1</span>;</div><div class="line">		<span class="keyword">int</span> mid = left;</div><div class="line">		<span class="keyword">while</span> (array[left] &gt;= array[right]) &#123;</div><div class="line">			<span class="comment">//找到结束时</span></div><div class="line">			<span class="keyword">if</span>  (right - left == <span class="number">1</span>) &#123;</div><div class="line">				mid = right;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			</div><div class="line">			mid = (left + right)/<span class="number">2</span>;</div><div class="line">			<span class="comment">//预防序列1 0 1 1 1这种情况</span></div><div class="line">			<span class="keyword">if</span> (array[left] == array[right] &amp;&amp; array[mid] == array[left]) &#123;</div><div class="line">				<span class="keyword">int</span> ret = array[left];</div><div class="line">				<span class="keyword">for</span> (<span class="keyword">int</span> i = left+<span class="number">1</span>; i &lt;= right; i++) ret = Math.max(ret, array[i]);</div><div class="line">				<span class="keyword">return</span> ret;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (array[mid] &gt;= array[left]) &#123;</div><div class="line">				left = mid;</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (array[mid] &lt;= array[right]) &#123;</div><div class="line">				right = mid;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> array[mid];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="3-输入一个链表，从尾到头打印链表每个节点的值。"><a href="#3-输入一个链表，从尾到头打印链表每个节点的值。" class="headerlink" title="3. 输入一个链表，从尾到头打印链表每个节点的值。"></a>3. 输入一个链表，从尾到头打印链表每个节点的值。</h4><blockquote>
+<p>这个问题的最好解决方式是使用递归，有点类似于二叉树后续遍历方式。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> ArrayList&lt;Integer&gt; <span class="title">printListFromTailToHead</span><span class="params">(ListNode listNode)</span> </span>&#123;</div><div class="line"></div><div class="line">		ArrayList&lt;Integer&gt; result = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">		<span class="keyword">if</span> (listNode != <span class="keyword">null</span>) &#123;</div><div class="line">			printListFromTailToHeadCore(listNode, result);</div><div class="line">		&#125;;</div><div class="line">		<span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printListFromTailToHeadCore</span><span class="params">(ListNode listNode, ArrayList&lt;Integer&gt; list)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (listNode != <span class="keyword">null</span>) &#123;</div><div class="line">			printListFromTailToHeadCore(listNode.next, list);</div><div class="line">			list.add(listNode.val);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="4-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列-1-2-4-7-3-5-6-8-和中序遍历序列-4-7-2-1-5-3-8-6-，则重建二叉树并返回。"><a href="#4-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列-1-2-4-7-3-5-6-8-和中序遍历序列-4-7-2-1-5-3-8-6-，则重建二叉树并返回。" class="headerlink" title="4. 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。"></a>4. 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</h4><blockquote>
+<p>这个问题属于二叉树操作，但这里也可以把它归类于链表，同样，解决这个问题较好的方式是使用递归。同时我们需要利用到二叉树的特性：</p>
+</blockquote>
+<ul>
+<li>二叉树的先序遍历是先遍历父节点，然后遍历左子节点，最后遍历右子节点；  </li>
+<li>中序遍历是先左子节点，然后父节点，最后右子节点。</li>
+</ul>
+<blockquote>
+<p>所以利用这个特性，我们知道先序遍历的第一个点是整个二叉树的根节点，然后中序遍历以这个节点为中心，分成了左子树和右子树，举例来说，前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，那么以1为根节点，左子树为{4,7,2}，右子树为{5,3,8,6}，然后接下来左子树以2为根节点，分成了左子树{4,7}，右子树{}，同样，以3为根节点，将树分成了左子树{5}，右子树{8,6}，整个过程是是个递归过程，所以使用递归较为合适。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> TreeNode <span class="title">reConstructBinaryTree</span><span class="params">(<span class="keyword">int</span> [] pre,<span class="keyword">int</span> [] in)</span> </span>&#123;</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> (pre.length == <span class="number">0</span> || in.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">		TreeNode root = <span class="keyword">new</span> TreeNode(pre[<span class="number">0</span>]);</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; in.length; i++) &#123;</div><div class="line">			<span class="comment">//找到切分点时</span></div><div class="line">			<span class="keyword">if</span> (pre[<span class="number">0</span>] == in[i]) &#123;</div><div class="line">				root.left = reConstructBinaryTree(Arrays.copyOfRange(pre, <span class="number">1</span>, i+<span class="number">1</span>), </div><div class="line">						Arrays.copyOfRange(in, <span class="number">0</span>, i));</div><div class="line">				root.right = reConstructBinaryTree(Arrays.copyOfRange(pre, i+<span class="number">1</span>, pre.length), </div><div class="line">						Arrays.copyOfRange(in, i+<span class="number">1</span>, in.length));</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>- 这里解释下Arrays.copyOfRange(int[] original, int from, int to)函数，这个函数复制original数组下标[from, to)部分，即from包含在范围内，而to不包含；  
+- pre[0] == in[i]语句找到中序遍历的根节点，然后将数组分成了左子树和右子树两部分，假设左子树节点数目为m，右子树节点数目为n，则这时前序遍历序列除第一个树外，接下来的n个节点在左子树中，再接下来的n个节点在右子树中，所以才有了递归的过程。  
+- 当然这个问题也可以不用递归思想，不过复杂度和代码量会大大增加。
+</code></pre><h5 id="补充知识点"><a href="#补充知识点" class="headerlink" title="补充知识点"></a>补充知识点</h5><ul>
+<li>非空二叉树的第n层上至多有2^(n-1)个元素；    </li>
+<li>深度为h的二叉树至多有2^h-1个结点；  </li>
+<li>在满二叉树中若其深度为h，则其所包含的结点数必为2^h-1。</li>
+<li>对于完全二叉树，设一个结点为i则其父节点为i/2，则2i为左子节点，2i+1为右子节点；  </li>
+<li>在完全二叉树中，具有n个节点的完全二叉树的深度为[log2]+1，其中[log2]+1是向下取整，log底取为2；  </li>
+<li>n0=n2+1  n0表示度数为0的节点 n2表示度数为2的节点；    </li>
+<li>前序遍历：根节点-&gt;左子树-&gt;右子树；    </li>
+<li>中序遍历：左子树-&gt;根节点-&gt;右子树；  </li>
+<li>后序遍历：左子树-&gt;右子树-&gt;根节点。</li>
+</ul>
+<h4 id="5-用两个栈来实现一个队列，完成队列的Push和Pop操作。-队列中的元素为int类型。"><a href="#5-用两个栈来实现一个队列，完成队列的Push和Pop操作。-队列中的元素为int类型。" class="headerlink" title="5. 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。"></a>5. 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。</h4><blockquote>
+<p>栈有FILO性质，队列有FIFO性质；直接上代码</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">Stack&lt;Integer&gt; stack1 = <span class="keyword">new</span> Stack&lt;Integer&gt;();</div><div class="line">    Stack&lt;Integer&gt; stack2 = <span class="keyword">new</span> Stack&lt;Integer&gt;();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> node)</span> </span>&#123;</div><div class="line">        stack1.push(node);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (stack2.isEmpty()) &#123;</div><div class="line">        </div><div class="line">            <span class="keyword">while</span> (!stack1.isEmpty()) &#123;</div><div class="line">                stack2.push(stack1.pop());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> ret = stack2.pop();</div><div class="line">        <span class="keyword">return</span> ret;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h4 id="6-我们可以用21的小矩形横着或者竖着去覆盖更大的矩形。请问用n个21的小矩形无重叠地覆盖一个2-n的大矩形，总共有多少种方法？"><a href="#6-我们可以用21的小矩形横着或者竖着去覆盖更大的矩形。请问用n个21的小矩形无重叠地覆盖一个2-n的大矩形，总共有多少种方法？" class="headerlink" title="6. 我们可以用21的小矩形横着或者竖着去覆盖更大的矩形。请问用n个21的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？"></a>6. 我们可以用2<em>1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2</em>1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？</h4><blockquote>
+<p>这个问题是典型的斐波拉契数列题，一般使用动态规划的方式解决，想象2X8的矩形，设为f(8)，最左边有两种放置方式： </p>
+</blockquote>
+<ul>
+<li>最左边竖放时，右边还剩下2X7，这时可记为f(7)；  </li>
+<li>最左边横放时，这时可放置两块，右边剩下2X6，记为f(6);</li>
+</ul>
+<p>所以f(n) = f(n-1) + f(n-2)，一个典型的斐波拉契数列，然后使用动规思想即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public int RectCover(int target) &#123;</div><div class="line">		</div><div class="line">        if (target &lt;= 2) return target;</div><div class="line">        int n1 = 1, n2 = 2;</div><div class="line">        int m = target - 2;</div><div class="line">        while (m-- &gt; 0) &#123;</div><div class="line">            n2 = n1 + n2;</div><div class="line">            n1 = n2 - n1;</div><div class="line">        &#125;</div><div class="line">        return n2;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h4 id="7-输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。"><a href="#7-输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。" class="headerlink" title="7. 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。"></a>7. 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。</h4><blockquote>
+<p>这个问题类似于问题：以0为界，将数组中所有负数放置到整数后面，都是指针操作，即使用两个指针，一个指针初始化为数组第一个数字下标，它只向后移动，第二个指针初始化为数组最后一个数下标，它只向前移动，在两个指针相遇前，如果第一个指针指向的数是奇数，第二个指针指向的数为偶数，则交换这两个数，指针继续移动直到相遇。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reOrderArray</span><span class="params">(<span class="keyword">int</span> [] array)</span> </span>&#123;</div><div class="line">		 <span class="keyword">if</span> (array == <span class="keyword">null</span> || array.length == <span class="number">0</span>) <span class="keyword">return</span>;</div><div class="line">		 <span class="keyword">int</span> pos1 = <span class="number">0</span>, pos2 = array.length - <span class="number">1</span>;</div><div class="line">		 <span class="keyword">while</span> (pos1 &lt; pos2) &#123;</div><div class="line">			 <span class="keyword">while</span> (pos1 &lt; pos2 &amp;&amp; (array[pos1]&amp;<span class="number">1</span>) != <span class="number">0</span>) pos1++;</div><div class="line">			 <span class="keyword">while</span> (pos1 &lt; pos2 &amp;&amp; (array[pos2]&amp;<span class="number">1</span>) == <span class="number">0</span>) pos2--;</div><div class="line">			 <span class="comment">//交换</span></div><div class="line">			 <span class="keyword">if</span> (pos1 &lt; pos2) &#123;</div><div class="line">				 <span class="keyword">int</span> tmp = array[pos1];</div><div class="line">				 array[pos1] = array[pos2];</div><div class="line">				 array[pos2] = tmp;</div><div class="line">			 &#125;</div><div class="line">		 &#125;</div><div class="line">	 &#125;</div></pre></td></tr></table></figure>
+<h4 id="8-输入一个链表，输出该链表中倒数第k个结点。"><a href="#8-输入一个链表，输出该链表中倒数第k个结点。" class="headerlink" title="8. 输入一个链表，输出该链表中倒数第k个结点。"></a>8. 输入一个链表，输出该链表中倒数第k个结点。</h4><h3 id="to-be-comtinue"><a href="#to-be-comtinue" class="headerlink" title="to be comtinue"></a>to be comtinue</h3>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Algorithm/" rel="tag"># Algorithm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/06/java-concurrent-interview-questions/" rel="next" title="Java并发面试题集合">
+                <i class="fa fa-chevron-left"></i> Java并发面试题集合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Vincent" />
+          <p class="site-author-name" itemprop="name">Vincent</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fwensen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。"><span class="nav-number">1.</span> <span class="nav-text">1. 在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。-输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。-例如数组-3-4-5-1-2-为-1-2-3-4-5-的一个旋转，该数组的最小值为1。-NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。"><span class="nav-number">2.</span> <span class="nav-text">2. 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。 输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。 NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-输入一个链表，从尾到头打印链表每个节点的值。"><span class="nav-number">3.</span> <span class="nav-text">3. 输入一个链表，从尾到头打印链表每个节点的值。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列-1-2-4-7-3-5-6-8-和中序遍历序列-4-7-2-1-5-3-8-6-，则重建二叉树并返回。"><span class="nav-number">4.</span> <span class="nav-text">4. 输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#补充知识点"><span class="nav-number">4.1.</span> <span class="nav-text">补充知识点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-用两个栈来实现一个队列，完成队列的Push和Pop操作。-队列中的元素为int类型。"><span class="nav-number">5.</span> <span class="nav-text">5. 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-我们可以用21的小矩形横着或者竖着去覆盖更大的矩形。请问用n个21的小矩形无重叠地覆盖一个2-n的大矩形，总共有多少种方法？"><span class="nav-number">6.</span> <span class="nav-text">6. 我们可以用21的小矩形横着或者竖着去覆盖更大的矩形。请问用n个21的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。"><span class="nav-number">7.</span> <span class="nav-text">7. 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-输入一个链表，输出该链表中倒数第k个结点。"><span class="nav-number">8.</span> <span class="nav-text">8. 输入一个链表，输出该链表中倒数第k个结点。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#to-be-comtinue"><span class="nav-number"></span> <span class="nav-text">to be comtinue</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vincent</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
