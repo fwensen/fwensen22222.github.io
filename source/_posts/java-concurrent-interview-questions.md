@@ -4,8 +4,7 @@ date: 2017-08-06 16:20:25
 tags: Java
 categories: Java concurrent
 ---
-
-大部分内容截取自[Java并发多线程面试题 Top 50](http://blog.csdn.net/moneyshi/article/details/50512240), [JAVA多线程和并发基础面试问答](http://ifeve.com/java-multi-threading-concurrency-interview-questions-with-answers/), [java并发面试题(一)基础](http://ifeve.com/javaconcurrency-interview-questions-base/), 
+大部分内容截取自[Java并发多线程面试题 Top 50](http://blog.csdn.net/moneyshi/article/details/50512240), [JAVA多线程和并发基础面试问答](http://ifeve.com/java-multi-threading-concurrency-interview-questions-with-answers/), [java并发面试题(一)基础](http://ifeve.com/javaconcurrency-interview-questions-base/), [聊聊并发系列文章](http://ifeve.com/talk-concurrency/)   
 
 ### 1. 线程与进程的区别
 
@@ -60,14 +59,16 @@ volatile相当于synchronized的弱实现，也就是说volatile实现了类似s
 - volatile变量不会被缓存在寄存器中（只有拥有线程可见）或者其他对CPU不可见的地方，每次总是从主存中读取volatile变量的结果。也就是说对于volatile变量的修改，其它线程总是可见的，并且不是使用自己线程栈内部的变量。也就是在happens-before法则中，对一个valatile变量的写操作后，其后的任何读操作理解可见此写操作的结果。
 
 尽管volatile变量的特性不错，但是volatile并不能保证线程安全的，也就是说volatile字段的操作不是原子性的，volatile变量只能保证可见性（一个线程修改后其它线程能够理解看到此变化后的结果），要想保证原子性，目前为止只能加锁！
-##### 应用volatile变量的三个原则：  
+
+##### 应用volatile变量的三个原则：
+
 1. 写入变量不依赖此变量的值，或者只有一个线程修改此变量
 2. 变量的状态不需要与其它变量共同参与不变约束
 3. 访问变量不需要加锁
 正确使用 volatile 变量的条件
 您只能在有限的一些情形下使用 volatile 变量替代锁。要使 volatile 变量提供理想的线程安全，必须同时满足下面两个条件：  
   - 对变量的写操作不依赖于当前值。
-  - 该变量没有包含在具有其他变量的不变式中。
+  - 该变量没有包含在具有其他变量的不变式中.
 
 ### 6. 一个线程运行时发生异常会怎样？
 
@@ -103,9 +104,7 @@ volatile相当于synchronized的弱实现，也就是说volatile实现了类似s
 
 ### 12. 如何避免死锁？
 
-> Java多线程中的死锁是指两个或两个以上的进程在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。这是一个严重的问题，因为死锁会让你的程序挂起无法完成任务，死锁的发生必须
-
-##### 满足以下四个条件：
+> Java多线程中的死锁是指两个或两个以上的进程在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。这是一个严重的问题，因为死锁会让你的程序挂起无法完成任务，死锁的发生必须满足以下四个条件:
 
 - 互斥条件：一个资源每次只能被一个进程使用。
 - 请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。
@@ -252,11 +251,12 @@ public enum State {
 
 > 当一个线程需要调用对象的wait()方法的时候，这个线程必须拥有该对象的锁，接着它就会释放这个对象锁并进入等待状态直到其他线程调用这个对象上的notify()方法。同样的，当一个线程需要调用对象的notify()方法时，它会释放这个对象的锁，以便其他在等待的线程就可以得到这个对象锁。由于所有的这些方法都需要线程持有对象的锁，这样就只能通过同步来实现，所以他们只能在同步方法或者同步块中被调用。
 
-### 23. 为什么Thread类的sleep()和yield()方法是静态的？
+### 24. 为什么Thread类的sleep()和yield()方法是静态的？
 
 > Thread类的sleep()和yield()方法将在当前正在执行的线程上运行。所以在其他处于等待状态的线程上调用这些方法是没有意义的。这就是为什么这些方法是静态的。它们可以在当前正在执行的线程中工作，并避免程序员错误的认为可以在其他非运行线程调用这些方法。
 
-### 24. 乐观锁和悲观锁的理解及如何实现，有哪些实现方式？
+### 25. 乐观锁和悲观锁的理解及如何实现，有哪些实现方式？
+
 [一分钟教你知道乐观锁和悲观锁的区别](http://blog.csdn.net/hongchangfirst/article/details/26004335)  
 [深入理解乐观锁与悲观锁](http://www.hollischuang.com/archives/934)  
 > 悲观锁(Pessimistic Lock), 顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。
@@ -268,14 +268,14 @@ public enum State {
 实现乐观锁使用CAS，实现悲观锁使用Mutex
 数据库中实现乐观锁则是使用版本号。
 
-### 25. CopyOnWriteArrayList可以用于什么应用场景？
+### 26. CopyOnWriteArrayList可以用于什么应用场景？
 [聊聊并发-Java中的Copy-On-Write容器](http://ifeve.com/java-copy-on-write/)  
 
 > CopyOnWrite容器即写时复制的容器。通俗的理解是当我们往一个容器添加元素的时候，不直接往当前容器添加，而是先将当前容器进行Copy，复制出一个新的容器，然后新的容器里添加元素，添加完元素之后，再将原容器的引用指向新的容器。这样做的好处是我们可以对CopyOnWrite容器进行并发的读，而不需要加锁，因为当前容器不会添加任何元素。所以CopyOnWrite容器也是一种读写分离的思想，读和写不同的容器。
 
 > CopyOnWrite并发容器用于读多写少的并发场景。比如白名单，黑名单，商品类目的访问和更新场景，假如我们有一个搜索网站，用户在这个网站的搜索框中，输入关键字搜索内容，但是某些关键字不允许被搜索。这些不能被搜索的关键字会被放在一个黑名单当中，黑名单每天晚上更新一次。当用户搜索时，会检查当前关键字在不在黑名单当中，如果在，则提示不能搜索。
 
-### 26. 如何合理的配置Java线程池？如CPU密集型的任务，基本线程池应该配置多大？IO密集型的任务，基本线程池应该配置多大？用有界队列好还是无界队列好？任务非常多的时候，使用什么阻塞队列能获取最好的吞吐量？
+### 27. 如何合理的配置Java线程池？如CPU密集型的任务，基本线程池应该配置多大？IO密集型的任务，基本线程池应该配置多大？用有界队列好还是无界队列好？任务非常多的时候，使用什么阻塞队列能获取最好的吞吐量？
 
 [聊聊并发（三）Java线程池的分析和使用](http://ifeve.com/java-threadpool/)  
 [java并发面试题(二)实战](http://ifeve.com/javaconcurrency-interview-questions-combat/)  
@@ -283,14 +283,14 @@ public enum State {
 > 配置线程池时CPU密集型任务可以少配置线程数，大概和机器的cpu核数相当，可以使得每个线程都在执行任务, IO密集型时，大部分线程都阻塞，故需要多配置线程数，2*cpu核数,
 有界队列和无界队列的配置需区分业务场景，一般情况下配置有界队列，在一些可能会有爆发性增长的情况下使用无界队列。任务非常多时，使用非阻塞队列使用cas操作替代锁可以获得好的吞吐量。
 
-### 27. 如何实现乐观锁（CAS）？如何避免ABA问题？
+### 28. 如何实现乐观锁（CAS）？如何避免ABA问题？
 
 > 读取内存值  
 比较内存值和期望值   
 替换内存值为要替换值  
 带参数版本来避免aba问题，在读取和替换的时候进行判定版本是否一致，Java中有AtomicStampedReference。
 
-### 28. 线程池原理  
+### 29. 线程池原理
 
 [聊聊并发（三）Java线程池的分析和使用](http://ifeve.com/java-threadpool/) 
 
@@ -327,6 +327,5 @@ new ThreadPoolExecutor(corePoolSize, maximumPoolSize,
 > 7. TimeUnit（线程活动保持时间的单位）：可选的单位有天（DAYS），小时（HOURS），分钟（MINUTES），毫秒(MILLISECONDS)，微秒(MICROSECONDS, 千分之一毫秒)和毫微秒(NANOSECONDS, 千分之一微秒)。
 
 ![](http://ifeve.com/wp-content/uploads/2012/12/Java%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%BB%E8%A6%81%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg)
-
 
 ## to be continue
