@@ -105,7 +105,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20150315165508885?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9ueXRmamluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 <meta property="og:image" content="http://img.blog.csdn.net/20140105211344671">
 <meta property="og:image" content="http://img.blog.csdn.net/20140105211242593">
-<meta property="og:updated_time" content="2017-08-05T13:59:54.000Z">
+<meta property="og:updated_time" content="2017-08-05T16:09:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM知识总结">
 <meta name="twitter:description" content="这篇文章是对网上一些关于JVM博客的一个集合  一、JVM结构   1. 类加载器（ClassLoader)在JVM启动时或者在类运行时将需要的class加载到JVM中。（下图表示了从java源文件到JVM的整个过程，可配合理解。 关于类的加载机制，可以参考 2. 执行引擎负责执行class文件中包含的字节码指令（执行引擎的工作机制，这里也不细说了，这里主要介绍JVM结构） 3. 内存区（也叫运">
@@ -356,7 +356,7 @@
 <ul>
 <li>方法区(Method Area)：用于存储类结构信息的地方，包括常量池、静态变量、构造函数等。虽然JVM规范把方法区描述为堆的一个逻辑部分， 但它却有个别名non-heap（非堆），所以大家不要搞混淆了。方法区还包含一个运行时常量池  </li>
 <li>Java堆(Heap)：存储Java实例或者对象的地方。这块是GC的主要区域（后面解释）。从存储的内容我们可以很容易知道，方法区和堆是被所有Java线程共享的  </li>
-<li>Java栈(Stack)：Java栈总是和线程关联在一起，每当创建一个线程时，JVM就会为这个线程创建一个对应的Java栈。在这个Java栈中又会包含多个栈帧，每运行一个方法就创建一个栈帧，用于存储局部变量表、操作栈、方法返回值等。每一个方法从调用直至执行完成的过程，就对应一个栈帧在Java栈中入栈到出栈的过程。所以Java栈是现成私有的。  </li>
+<li>Java栈(Stack)：Java栈总是和线程关联在一起，每当创建一个线程时，JVM就会为这个线程创建一个对应的Java栈。在这个Java栈中又会包含多个栈帧，每运行一个方法就创建一个栈帧，用于存储局部变量表、操作栈、方法返回值等。每一个方法从调用直至执行完成的过程，就对应一个栈帧在Java栈中入栈到出栈的过程。所以Java栈是线程私有的。  </li>
 <li>程序计数器(PC Register)：用于保存当前线程执行的内存地址。由于JVM程序是多线程执行的（线程轮流切换），所以为了保证线程切换回来后，还能恢复到原先状态，就需要一个独立的计数器，记录之前中断的地方，可见程序计数器也是线程私有的。  </li>
 <li>本地方法栈(Native Method Stack)：和java栈的作用差不多，只不过是为JVM使用到的native方法服务的。</li>
 </ul>
@@ -384,7 +384,7 @@
 </ul>
 <blockquote>
 <p>双亲委派模型的工作流程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把请求委托给父加载器去完成，依次向上，因此，所有的类加载请求最终都应该被传递到顶层的启动类加载器中，只有当父加载器在它的搜索范围中没有找到所需的类时，即无法完成该加载，子加载器才会尝试自己去加载该类。</p>
-<p>使用双亲委派模型来组织类加载器之间的关系，有一个很明显的好处，就是Java类随着它的类加载器（说白了，就是它所在的目录）一起具备了一种带有优先级的层次关系，这对于保证Java程序的稳定运作很重要。例如，类java.lang.Object类存放在JDK\jre\lib下的rt.jar之中，因此无论是哪个类加载器要加载此类，最终都会委派给启动类加载器进行加载，这边保证了Object类在程序中的各种类加载器中都是同一个类。</p>
+<p>使用双亲委派模型来组织类加载器之间的关系，有一个很明显的好处，就是Java类随着它的类加载器（说白了，就是它所在的目录）一起具备了一种带有优先级的层次关系，这对于保证Java程序的稳定运作很重要。例如，类java.lang.Object类存放在JDK\jre\lib下的rt.jar之中，因此无论是哪个类加载器要加载此类，最终都会委派给启动类加载器进行加载，这便保证了Object类在程序中的各种类加载器中都是同一个类。</p>
 </blockquote>
 <h4 id="2-验证"><a href="#2-验证" class="headerlink" title="2. 验证"></a>2. 验证</h4><blockquote>
 <p>验证的目的是为了确保Class文件中的字节流包含的信息符合当前虚拟机的要求，而且不会危害虚拟机自身的安全。不同的虚拟机对类验证的实现可能会有所不同，但大致都会完成以下四个阶段的验证：文件格式的验证、元数据的验证、字节码验证和符号引用验证。</p>
@@ -411,7 +411,7 @@
 <ol>
 <li><p><strong>类或接口的解析</strong>：判断所要转化成的直接引用是对数组类型，还是普通的对象类型的引用，从而进行不同的解析。</p>
 </li>
-<li><p>字段解析：对字段进行解析时，会先在本类中查找是否包含有简单名称和字段描述符都与目标相匹配的字段，如果有，则查找结束；如果没有，则会按照继承关系从上往下递归搜索该类所实现的各个接口和它们的父接口，还没有，则按照继承关系从上往下递归搜索其父类，直至查找结束</p>
+<li><p>字段解析：对字段进行解析时，会先在本类中查找是否包含有简单名称和字段描述符都与目标相匹配的字段，如果有，则查找结束；如果没有，则会按照继承关系从上往下递归搜索该类所实现的各个接口和它们的父接口，还没有，则按照继承关系从下往上递归搜索其父类，直至查找结束</p>
 </li>
 <li><p>类方法解析：对类方法的解析与对字段解析的搜索步骤差不多，只是多了判断该方法所处的是类还是接口的步骤，而且对类方法的匹配搜索，是先搜索父类，再搜索接口。</p>
 </li>
@@ -428,7 +428,7 @@
 </li>
 <li><p>&lt; clinit &gt;（）方法对于类或接口来说并不是必须的，如果一个类中没有静态语句块，也没有对类变量的赋值操作，那么编译器可以不为这个类生成&lt; clinit &gt;（）方法。</p>
 </li>
-<li><p>接口中不能使用静态语句块，但仍然有类变量（final static）初始化的赋值操作，因此接口与类一样会生成&lt; clinit &gt;（）方法。但是接口鱼类不同的是：执行接口的&lt; clinit &gt;（）方法不需要先执行父接口的&lt; clinit &gt;（）方法，只有当父接口中定义的变量被使用时，父接口才会被初始化。另外，接口的实现类在初始化时也一样不会执行接口的&lt; clinit &gt;（）方法。</p>
+<li><p>接口中不能使用静态语句块，但仍然有类变量（final static）初始化的赋值操作，因此接口与类一样会生成&lt; clinit &gt;（）方法。但是接口与类不同的是：执行接口的&lt; clinit &gt;（）方法不需要先执行父接口的&lt; clinit &gt;（）方法，只有当父接口中定义的变量被使用时，父接口才会被初始化。另外，接口的实现类在初始化时也一样不会执行接口的&lt; clinit &gt;（）方法。</p>
 </li>
 <li><p>虚拟机会保证一个类的&lt; clinit &gt;（）方法在多线程环境中被正确地加锁和同步，如果多个线程同时去初始化一个类，那么只会有一个线程去执行这个类的&lt; clinit &gt;（）方法，其他线程都需要阻塞等待，直到活动线程执行&lt; clinit &gt;（）方法完毕。如果在一个类的&lt; clinit &lt; clinit &gt;&gt;（）方法中有耗时很长的操作，那就可能造成多个线程阻塞，在实际应用中这种阻塞往往是很隐蔽的。</p>
 </li>
@@ -477,11 +477,22 @@
 <p>G1 GC由Young Generation和Old Generation组成。G1将Java堆空间分割成了若干个Region，即年轻代/老年代是一系列Region的集合，这就意味着在分配空间时不需要一个连续的内存区间，即不需要在JVM启动时决定哪些Region属于老年代，哪些属于年轻代。因为随着时间推移，年轻代Region被回收后，又会变为可用状态（后面会说到的Unused Region或Available Region）了。</p>
 <p>G1年轻代收集器是并行Stop-the-world收集器，和其他的HotSpot GC一样，当一个年轻代GC发生时，整个年轻代被回收。G1的老年代收集器有所不同，它在老年代不需要整个老年代回收，只有一部分Region被调用。</p>
 <p>G1 GC的年轻代由Eden Region和Survivor Region组成。当一个JVM分配Eden Region失败后就触发一个年轻代回收，这意味着Eden区间满了。然后GC开始释放空间，第一个年轻代收集器会移动所有的存储对象从Eden Region到Survivor Region，这就是“Copy to Survivor”过程。</p>
+<h4 id="六、对象引用类型"><a href="#六、对象引用类型" class="headerlink" title="六、对象引用类型"></a>六、对象引用类型</h4><ul>
+<li><p>Reference(or named Strong Reference)（ 强引用）：普通类型的引用。</p>
+</li>
+<li><p>SoftReference（ 软引用）：被这种引用指向的对象，如果此对象没要再被其他Strong Reference引用的话，可能在任何时候被GC。虽然是可能在任何时候被GC，但是通常是在可用内存数比较低的时候，并且在程序抛出OutOfMemoryError之前才发生对此对象的GC。SoftReference通常被用作实现Cache的对象引用，如果这个对象被GC了，那么他可以在任何时候再重新被创建。另外，根据JDK文档中介绍，实际JVM的实现是鼓励不回收最近创建和最近使用的对象。SoftReference 类的一个典型用途就是用于内存敏感的高速缓存。</p>
+</li>
+<li><p>WeakReference（弱引用）：如果一个被WeakReference引用的对象，当没要任何SoftReference和StrongReference引用时，立即会被GC。和SoftReference的区别是：WeakReference对象是被eagerly collected，即一旦没要任何SoftReference和StrongReference引用，立即被清楚；而只被SoftReference引用的对象，不回立即被清楚，只有当内存不够，即将发生OutOfMemoryError时才被清除，而且是先清除不常用的。SoftReference适合实现Cache用。WeakReference 类的一个典型用途就是规范化映射（ canonicalized mapping ）</p>
+</li>
+<li><p>PhantomReference（虚引用）：当没有StrongReference，SoftReference和WeakReference引用时，随时可被GC。通常和ReferenceQueue联合使用，管理和清除与被引用对象（没有finalize方法）相关的本地资源。</p>
+</li>
+</ul>
 <h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><ol>
 <li><a href="http://blog.csdn.net/moneyshi/article/details/53033577" target="_blank" rel="external">VM结构、GC工作机制详解</a>    </li>
 <li><a href="http://blog.csdn.net/java2000_wl/article/details/8030172" target="_blank" rel="external">Java虚拟机学习 - 垃圾收集器</a>  </li>
 <li><a href="http://blog.csdn.net/ns_code/article/details/17881581" target="_blank" rel="external">深入Java虚拟机之四：类加载机制</a>  </li>
 <li><a href="http://blog.csdn.net/mmc_maodun/article/category/1823903" target="_blank" rel="external">深入Java虚拟机系列</a>  </li>
+<li><a href="http://blog.jobbole.com/109170/" target="_blank" rel="external">深入理解 Java G1 垃圾收集器</a>  </li>
 </ol>
 
       
@@ -534,6 +545,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/06/java-concurrent-interview-questions/" rel="prev" title="Java并发面试题集合">
+                Java并发面试题集合 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -606,7 +621,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -617,7 +632,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -674,7 +689,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、JVM结构"><span class="nav-number">1.</span> <span class="nav-text">一、JVM结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-类加载器（ClassLoader"><span class="nav-number">1.1.</span> <span class="nav-text">1. 类加载器（ClassLoader)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-执行引擎"><span class="nav-number">1.2.</span> <span class="nav-text">2. 执行引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-内存区（也叫运行时数据区）"><span class="nav-number">1.3.</span> <span class="nav-text">3. 内存区（也叫运行时数据区）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-本地方法接口"><span class="nav-number">1.4.</span> <span class="nav-text">4.本地方法接口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、类加载机制"><span class="nav-number">2.</span> <span class="nav-text">二、类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-加载"><span class="nav-number">2.1.</span> <span class="nav-text">1. 加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-验证"><span class="nav-number">2.2.</span> <span class="nav-text">2. 验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-准备"><span class="nav-number">2.3.</span> <span class="nav-text">3.  准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-解析"><span class="nav-number">2.4.</span> <span class="nav-text">4. 解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-初始化"><span class="nav-number">2.5.</span> <span class="nav-text">5. 初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-clinit-gt-（）方法的执行规则"><span class="nav-number">2.5.1.</span> <span class="nav-text">< clinit >（）方法的执行规则:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、内存分配"><span class="nav-number">3.</span> <span class="nav-text">三、内存分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、垃圾检测、回收算法"><span class="nav-number">4.</span> <span class="nav-text">四、垃圾检测、回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、垃圾收集器"><span class="nav-number">5.</span> <span class="nav-text">五、垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-新生代垃圾收集器"><span class="nav-number">5.1.</span> <span class="nav-text">1. 新生代垃圾收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-老年代垃圾收集器"><span class="nav-number">5.2.</span> <span class="nav-text">2. 老年代垃圾收集器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、JVM结构"><span class="nav-number">1.</span> <span class="nav-text">一、JVM结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-类加载器（ClassLoader"><span class="nav-number">1.1.</span> <span class="nav-text">1. 类加载器（ClassLoader)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-执行引擎"><span class="nav-number">1.2.</span> <span class="nav-text">2. 执行引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-内存区（也叫运行时数据区）"><span class="nav-number">1.3.</span> <span class="nav-text">3. 内存区（也叫运行时数据区）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-本地方法接口"><span class="nav-number">1.4.</span> <span class="nav-text">4.本地方法接口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、类加载机制"><span class="nav-number">2.</span> <span class="nav-text">二、类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-加载"><span class="nav-number">2.1.</span> <span class="nav-text">1. 加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-验证"><span class="nav-number">2.2.</span> <span class="nav-text">2. 验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-准备"><span class="nav-number">2.3.</span> <span class="nav-text">3.  准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-解析"><span class="nav-number">2.4.</span> <span class="nav-text">4. 解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-初始化"><span class="nav-number">2.5.</span> <span class="nav-text">5. 初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lt-clinit-gt-（）方法的执行规则"><span class="nav-number">2.5.1.</span> <span class="nav-text">< clinit >（）方法的执行规则:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、内存分配"><span class="nav-number">3.</span> <span class="nav-text">三、内存分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、垃圾检测、回收算法"><span class="nav-number">4.</span> <span class="nav-text">四、垃圾检测、回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、垃圾收集器"><span class="nav-number">5.</span> <span class="nav-text">五、垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-新生代垃圾收集器"><span class="nav-number">5.1.</span> <span class="nav-text">1. 新生代垃圾收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-老年代垃圾收集器"><span class="nav-number">5.2.</span> <span class="nav-text">2. 老年代垃圾收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、对象引用类型"><span class="nav-number">5.3.</span> <span class="nav-text">六、对象引用类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
             
 
           </div>
